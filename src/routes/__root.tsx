@@ -18,7 +18,7 @@ function RootLayout() {
       <I18nProvider>
         <ScrollProgress />
         <Nav />
-        <main>
+        <main id="main" tabIndex={-1}>
           <Outlet />
         </main>
         <Footer />

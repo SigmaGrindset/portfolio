@@ -12,6 +12,7 @@ gsap.defaults({ ease: 'power3.out', duration: 0.9 });
 const router = createRouter({
   routeTree,
   scrollRestoration: true,
+  defaultViewTransition: true,
 });
 
 declare module '@tanstack/react-router' {
