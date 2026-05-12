@@ -23,7 +23,7 @@ export function ScrollProgress() {
     <div
       ref={ref}
       aria-hidden
-      className="fixed top-0 left-0 right-0 h-[2px] bg-accent z-[60] origin-left scale-x-0 pointer-events-none"
+      className="fixed top-0 left-0 right-0 h-0.5 bg-accent z-60 origin-left scale-x-0 pointer-events-none"
     />
   );
 }

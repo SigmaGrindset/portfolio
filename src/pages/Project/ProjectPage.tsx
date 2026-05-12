@@ -1,4 +1,5 @@
 import { useTranslation } from '@/i18n/i18n';
+import { useDocumentTitle } from '@/lib/useDocumentTitle';
 import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
 import { ProjectHero } from './components/ProjectHero';
 import { ProjectOverview } from './components/ProjectOverview';
@@ -10,6 +11,7 @@ import { ProjectNav } from './components/ProjectNav';
 export function ProjectPage({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const project = getProjectBySlug(slug);
+  useDocumentTitle(project?.title);
 
   if (!project) {
     return (

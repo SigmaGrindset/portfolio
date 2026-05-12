@@ -9,4 +9,3 @@ function ProjectRoute() {
   const { slug } = useParams({ from: '/projects/$slug' });
   return <ProjectPage slug={slug} />;
 }
-

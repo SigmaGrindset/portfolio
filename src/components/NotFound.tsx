@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/i18n/i18n';
+import { useDocumentTitle } from '@/lib/useDocumentTitle';
 
 export function NotFound() {
   const { t } = useTranslation();
+  useDocumentTitle('404');
 
   return (
     <section className="min-h-[80vh] flex items-center justify-center relative z-10 px-8">
