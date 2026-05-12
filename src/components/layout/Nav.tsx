@@ -33,7 +33,7 @@ export function Nav() {
       className="sticky top-0 z-50 backdrop-blur-xl bg-[color:var(--color-bg)]/70 border-b border-[color:var(--color-border)]"
     >
       <div className="max-w-[1100px] mx-auto px-8 py-5 flex justify-between items-center">
-        <a href="#top" className="font-bold text-base tracking-tight">
+        <a href="/" className="font-bold text-base tracking-tight">
           antonio<span className="text-[color:var(--color-accent)]">.</span>
         </a>
         <div className="hidden md:flex items-center gap-8">

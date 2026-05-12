@@ -1,5 +1,7 @@
 # Portfolio — Antonio Batarilović
 
+**Live:** [antoniobatarilovic.vercel.app](https://antoniobatarilovic.vercel.app/)
+
 ## Stack
 - Vite + React 18 + TypeScript
 - TanStack Router (file-based)
