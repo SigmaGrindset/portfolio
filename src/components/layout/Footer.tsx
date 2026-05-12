@@ -4,36 +4,39 @@ import { useTranslation } from '@/i18n/i18n';
 export function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="border-t border-border py-8 relative z-10">
-      <div className="max-w-[1100px] mx-auto px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p className="font-mono text-xs text-fg-tertiary">
-          {t.footer} · 2026
+    <footer className="border-t border-fg py-6 relative z-10 mt-12">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-secondary">
+          {t.footer} · MMXXVI
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-6 items-center">
           <a
             href="https://github.com/SigmaGrindset"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary hover:border-accent hover:text-accent transition-colors"
+            className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg hover:text-accent transition-colors inline-flex items-center gap-1.5"
           >
-            <Github size={16} />
+            <Github size={13} />
+            GitHub
           </a>
           <a
             href="https://www.linkedin.com/in/antonio-batarilovi%C4%87-509a26240/"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
-            className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary hover:border-accent hover:text-accent transition-colors"
+            className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg hover:text-accent transition-colors inline-flex items-center gap-1.5"
           >
-            <Linkedin size={16} />
+            <Linkedin size={13} />
+            LinkedIn
           </a>
           <a
             href="mailto:antoniobnoni@gmail.com"
             aria-label="Email"
-            className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary hover:border-accent hover:text-accent transition-colors"
+            className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg hover:text-accent transition-colors inline-flex items-center gap-1.5"
           >
-            <Mail size={16} />
+            <Mail size={13} />
+            Email
           </a>
         </div>
       </div>

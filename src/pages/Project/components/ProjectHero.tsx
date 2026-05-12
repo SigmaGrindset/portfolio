@@ -7,14 +7,10 @@ import { useTranslation, useL } from '@/i18n/i18n';
 import type { ProjectDetail } from '@/data/projects';
 
 const statusStyle: Record<ProjectDetail['status'], string> = {
-  live: 'text-green-400 border-green-400/30 bg-green-400/10',
-  dev: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
-  archived:
-    'text-fg-tertiary border-border bg-surface',
+  live: 'text-accent border-accent',
+  dev: 'text-fg border-fg',
+  archived: 'text-fg-tertiary border-rule',
 };
-
-const buttonTransition =
-  'transition-[background-color,border-color,color] duration-200';
 
 export function ProjectHero({ project }: { project: ProjectDetail }) {
   const { t } = useTranslation();
@@ -27,20 +23,18 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
         '[data-ph="back"]',
         '[data-ph="category"]',
         '[data-ph="title"]',
-        '[data-ph="desc"]',
+        '[data-ph="lede"]',
         '[data-ph="meta"] > *',
         '[data-ph="actions"] > *',
       ];
-
       gsap.set(targets, { autoAlpha: 0, y: 16 });
-      gsap.set('[data-ph="title"]', { y: 40 });
+      gsap.set('[data-ph="title"]', { y: 32 });
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
       tl.to('[data-ph="back"]', { y: 0, autoAlpha: 1, duration: 0.5 })
         .to('[data-ph="category"]', { y: 0, autoAlpha: 1, duration: 0.5 }, '-=0.2')
         .to('[data-ph="title"]', { y: 0, autoAlpha: 1, duration: 0.9 }, '-=0.3')
-        .to('[data-ph="desc"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
+        .to('[data-ph="lede"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
         .to(
           '[data-ph="meta"] > *',
           { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08 },
@@ -62,85 +56,99 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
   }[project.status];
 
   return (
-    <header ref={root} className="pt-12 pb-16 relative z-10">
-      <div className="max-w-[1100px] mx-auto px-8">
+    <header ref={root} className="pt-10 pb-12 border-b border-rule relative z-10">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
         <Link
           to="/"
           hash="projects"
           data-ph="back"
-          className="inline-flex items-center gap-2 text-sm font-mono text-fg-secondary hover:text-accent transition-colors mb-10"
+          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-fg-secondary hover:text-accent transition-colors mb-12"
         >
-          <ArrowLeft size={14} />
+          <ArrowLeft size={12} />
           {t.project.back}
         </Link>
 
-        <div data-ph="category" className="font-mono text-sm text-accent mb-4">
-          {project.category}
-        </div>
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-2 md:border-r md:border-rule md:pr-6">
+            <div
+              data-ph="category"
+              className="font-mono text-xs uppercase tracking-[0.15em] text-accent"
+            >
+              {project.category}
+            </div>
+            <div className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-tertiary mt-2">
+              {project.year}
+            </div>
+          </div>
 
-        <h1
-          data-ph="title"
-          className="font-extrabold tracking-[-0.03em] leading-[0.95] text-[clamp(2.5rem,7vw,5.5rem)] mb-6"
-        >
-          {project.title}
-        </h1>
+          <div className="col-span-12 md:col-span-10">
+            <h1
+              data-ph="title"
+              className="font-serif font-normal wonk text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] tracking-[-0.025em] mb-6"
+            >
+              <em className="italic font-light text-accent">
+                {project.title.split(' ')[0]}
+              </em>
+              {project.title.split(' ').length > 1 && (
+                <> {project.title.split(' ').slice(1).join(' ')}</>
+              )}
+            </h1>
 
-        <p
-          data-ph="desc"
-          className="text-fg-secondary text-lg max-w-[720px] mb-10"
-        >
-          {l(project.shortDesc)}
-        </p>
+            <p
+              data-ph="lede"
+              className="font-serif text-xl md:text-2xl leading-[1.4] max-w-[44ch] mb-12 text-fg-secondary"
+            >
+              {l(project.shortDesc)}
+            </p>
 
-        <div data-ph="meta" className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10 max-w-[800px]">
-          <MetaBlock label={t.project.role} value={l(project.role)} />
-          <MetaBlock label={t.project.context} value={l(project.context)} />
-          <MetaBlock label={t.project.year} value={project.year} />
-          <MetaBlock
-            label={t.project.status}
-            value={
-              <span
-                className={
-                  'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-mono ' +
-                  statusStyle[project.status]
+            <dl
+              data-ph="meta"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-rule max-w-[800px] mb-10"
+            >
+              <MetaBlock label={t.project.role} value={l(project.role)} />
+              <MetaBlock label={t.project.context} value={l(project.context)} />
+              <MetaBlock label={t.project.year} value={project.year} />
+              <MetaBlock
+                label={t.project.status}
+                value={
+                  <span
+                    className={
+                      'inline-flex items-center gap-1.5 px-2 py-0.5 border text-[0.7rem] font-mono uppercase tracking-[0.1em] ' +
+                      statusStyle[project.status]
+                    }
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                    {statusLabel}
+                  </span>
                 }
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                {statusLabel}
-              </span>
-            }
-          />
-        </div>
+              />
+            </dl>
 
-        <div data-ph="actions" className="flex flex-wrap gap-3">
-          {project.links.github && (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className={
-                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent ' +
-                buttonTransition
-              }
-            >
-              <Github size={16} />
-              {t.project.github}
-            </a>
-          )}
-          {project.links.live && (
-            <a
-              href={project.links.live}
-              target="_blank"
-              rel="noreferrer"
-              className={
-                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover ' +
-                buttonTransition
-              }
-            >
-              <ArrowUpRight size={16} />
-              {t.project.live}
-            </a>
-          )}
+            <div data-ph="actions" className="flex flex-wrap gap-3">
+              {project.links.github && (
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] border border-fg text-fg px-5 py-2.5 hover:bg-fg hover:text-bg transition-colors"
+                >
+                  <Github size={14} />
+                  {t.project.github}
+                </a>
+              )}
+              {project.links.live && (
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] bg-accent text-bg border border-accent px-5 py-2.5 hover:bg-accent-hover hover:border-accent-hover transition-colors"
+                >
+                  <ArrowUpRight size={14} />
+                  {t.project.live}
+                </a>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -150,10 +158,10 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
 function MetaBlock({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-tertiary mb-2">
+      <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
         {label}
-      </div>
-      <div className="text-sm text-fg font-medium">{value}</div>
+      </dt>
+      <dd className="text-sm font-medium">{value}</dd>
     </div>
   );
 }

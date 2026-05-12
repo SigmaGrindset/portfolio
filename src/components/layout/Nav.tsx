@@ -12,9 +12,9 @@ export function Nav() {
   useGSAP(
     () => {
       gsap.from(ref.current, {
-        y: -40,
+        y: -20,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.6,
         ease: 'power3.out',
       });
     },
@@ -22,35 +22,36 @@ export function Nav() {
   );
 
   const links = [
-    { num: '01.', label: t.nav.about, href: '#about' },
-    { num: '02.', label: t.nav.projects, href: '#projects' },
-    { num: '03.', label: t.nav.contact, href: '#contact' },
+    { label: t.nav.about, href: '#about' },
+    { label: t.nav.projects, href: '#projects' },
+    { label: t.nav.contact, href: '#contact' },
   ];
 
   return (
     <nav
       ref={ref}
-      className="sticky top-0 z-50 backdrop-blur-xl bg-bg/70 border-b border-border"
+      className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-rule"
     >
-      <div className="max-w-[1100px] mx-auto px-8 py-5 flex justify-between items-center">
-        <a href="/" className="font-bold text-base tracking-tight">
-          antonio<span className="text-accent">.</span>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-5 flex justify-between items-baseline">
+        <a href="/" className="font-serif text-xl tracking-tight">
+          <em className="font-normal italic">A.</em>
+          <span className="font-semibold">Batarilović</span>
         </a>
-        <div className="hidden md:flex items-center gap-8">
-          <ul className="flex gap-8">
+        <div className="hidden md:flex items-baseline gap-10">
+          <ul className="flex gap-10">
             {links.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="text-sm font-medium text-fg-secondary hover:text-fg transition-colors"
+                  className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-fg hover:text-accent transition-colors relative group"
                 >
-                  <span className="font-mono text-xs text-accent mr-1.5">{l.num}</span>
-                  {l.label}
+                  / {l.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full" />
                 </a>
               </li>
             ))}
           </ul>
-          <div className="flex items-center gap-2 pl-4 border-l border-border">
+          <div className="flex items-center gap-2 pl-6 border-l border-rule">
             <LanguageToggle />
             <ThemeToggle />
           </div>

@@ -1,11 +1,9 @@
 import { useRef } from 'react';
-import { ArrowUpRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation, useL } from '@/i18n/i18n';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { SkillTag } from '@/components/ui/SkillTag';
 import { projects, type ProjectDetail } from '@/data/projects';
 
 export function Projects() {
@@ -14,15 +12,15 @@ export function Projects() {
 
   useGSAP(
     () => {
-      gsap.utils.toArray<HTMLElement>('[data-project-card]').forEach((card) => {
-        gsap.set(card, { autoAlpha: 0, y: 40 });
-        gsap.to(card, {
+      gsap.utils.toArray<HTMLElement>('[data-project-row]').forEach((row) => {
+        gsap.set(row, { autoAlpha: 0, y: 24 });
+        gsap.to(row, {
           y: 0,
           autoAlpha: 1,
-          duration: 0.9,
+          duration: 0.8,
           scrollTrigger: {
-            trigger: card,
-            start: 'top 88%',
+            trigger: row,
+            start: 'top 90%',
             toggleActions: 'play none none none',
           },
         });
@@ -31,23 +29,14 @@ export function Projects() {
     { scope: root },
   );
 
-  const featured = projects.filter((p) => p.featured);
-  const small = projects.filter((p) => !p.featured);
-
   return (
-    <section ref={root} id="projects" className="py-24 relative z-10">
-      <div className="max-w-[1100px] mx-auto px-8">
-        <SectionHeader num="02." title={t.projects.title} />
+    <section ref={root} id="projects" className="relative z-10">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+        <SectionHeader num="03" title={t.projects.title} />
 
-        <div className="grid gap-5 mb-5">
-          {featured.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {small.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
+        <div className="flex flex-col">
+          {projects.map((p, i) => (
+            <ProjectRow key={p.slug} project={p} index={i + 1} />
           ))}
         </div>
       </div>
@@ -55,60 +44,63 @@ export function Projects() {
   );
 }
 
-function ProjectCard({ project }: { project: ProjectDetail }) {
+function ProjectRow({ project, index }: { project: ProjectDetail; index: number }) {
   const { t } = useTranslation();
   const l = useL();
-  const { title, shortDesc, techStack, cardTech, slug, category, featured } = project;
+  const { title, shortDesc, techStack, cardTech, slug, category, featured, year } = project;
   const allTech = cardTech ?? techStack.flatMap((g) => g.items.map((i) => i.name));
-  const visibleTech = cardTech ? allTech : featured ? allTech.slice(0, 7) : allTech.slice(0, 5);
+  const visibleTech = cardTech ? allTech : allTech.slice(0, 5);
 
   return (
     <Link
       to="/projects/$slug"
       params={{ slug }}
-      data-project-card
+      data-project-row
       className={
-        'group relative bg-surface border border-border rounded-xl transition-[border-color,transform] duration-300 hover:border-accent hover:-translate-y-1 overflow-hidden block ' +
-        (featured ? 'p-8' : 'p-6 flex flex-col gap-4')
+        'group grid grid-cols-12 gap-6 py-10 border-b border-rule items-start transition-colors duration-300 ' +
+        (featured ? 'bg-bg-2 px-6 my-2' : 'hover:bg-bg-2 px-6 -mx-6')
       }
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-        style={{
-          background:
-            'linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 10%, transparent) 0%, transparent 60%)',
-        }}
-      />
-      <div className="relative flex justify-between items-start mb-3">
-        <div>
-          {featured && category && (
-            <div className="font-mono text-xs text-accent mb-1.5">
-              {t.projects.featured} · {category}
-            </div>
-          )}
-          <h4 className={'font-bold tracking-tight ' + (featured ? 'text-2xl' : 'text-lg')}>
-            {title}
-          </h4>
-        </div>
-        <span
-          aria-hidden
-          className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary group-hover:border-accent group-hover:text-accent transition-colors flex-shrink-0"
-        >
-          <ArrowUpRight size={16} />
-        </span>
+      {/* Index marker */}
+      <div className="col-span-2 md:col-span-1 font-serif font-light italic text-accent text-3xl md:text-4xl leading-none">
+        {String(index).padStart(2, '0')}
       </div>
-      <p
-        className={
-          'relative text-fg-secondary ' +
-          (featured ? 'text-[0.95rem] mb-6' : 'text-sm flex-1')
-        }
-      >
-        {l(shortDesc)}
-      </p>
-      <div className="relative flex flex-wrap gap-2">
-        {visibleTech.map((tt) => (
-          <SkillTag key={tt}>{tt}</SkillTag>
+
+      {/* Meta (year + category) */}
+      <div className="col-span-10 md:col-span-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-secondary md:pt-2">
+        <div className="text-fg text-[0.8rem] mb-1">{year}</div>
+        {category}
+      </div>
+
+      {/* Title + description */}
+      <div className="col-span-12 md:col-span-6">
+        {featured && (
+          <span className="inline-block font-mono text-[0.65rem] uppercase tracking-[0.2em] bg-accent text-bg px-2 py-0.5 mb-3">
+            {t.projects.featured}
+          </span>
+        )}
+        <h3
+          className={
+            'font-serif font-normal tracking-tight leading-[1.1] mb-3 group-hover:text-accent transition-colors ' +
+            (featured ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl')
+          }
+        >
+          {title}
+        </h3>
+        <p className="text-[0.95rem] leading-[1.55] text-fg-secondary max-w-[60ch]">
+          {l(shortDesc)}
+        </p>
+      </div>
+
+      {/* Tech */}
+      <div className="col-span-12 md:col-span-3 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-fg-secondary md:text-right md:pt-2">
+        {visibleTech.map((tt, i) => (
+          <span key={tt} className="inline-block">
+            {tt}
+            {i < visibleTech.length - 1 && (
+              <span className="text-accent italic px-1.5">·</span>
+            )}
+          </span>
         ))}
       </div>
     </Link>

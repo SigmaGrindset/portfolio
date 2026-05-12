@@ -9,11 +9,11 @@ export function Contact() {
 
   useGSAP(
     () => {
-      gsap.set('[data-contact] > *', { autoAlpha: 0, y: 28 });
+      gsap.set('[data-contact] > *', { autoAlpha: 0, y: 24 });
       gsap.to('[data-contact] > *', {
         y: 0,
         autoAlpha: 1,
-        stagger: 0.12,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: root.current,
           start: 'top 80%',
@@ -25,20 +25,24 @@ export function Contact() {
   );
 
   return (
-    <section ref={root} id="contact" className="py-32 text-center relative z-10">
-      <div data-contact className="max-w-[1100px] mx-auto px-8">
-        <div className="font-mono text-sm text-accent mb-4">
-          03. {t.contact.eyebrow}
+    <section
+      ref={root}
+      id="contact"
+      className="py-32 text-center border-t border-rule mt-16 relative z-10"
+    >
+      <div data-contact className="max-w-[1280px] mx-auto px-6 md:px-10">
+        <div className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-6">
+          — 04 / {t.contact.eyebrow}
         </div>
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
-          {t.contact.title}
-        </h3>
-        <p className="max-w-[500px] mx-auto text-fg-secondary mb-10">
+        <h2 className="font-serif italic font-light text-[clamp(3rem,8vw,6rem)] leading-none mb-4">
+          Reci <em className="font-normal not-italic">bok.</em>
+        </h2>
+        <p className="max-w-[500px] mx-auto text-fg-secondary mb-10 mt-4">
           {t.contact.text}
         </p>
         <a
           href="mailto:antoniobnoni@gmail.com"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:-translate-y-px transition-[background-color,border-color,transform] duration-200"
+          className="font-serif text-2xl md:text-3xl underline decoration-rule underline-offset-[8px] decoration-1 hover:text-accent hover:decoration-accent transition-colors"
         >
           antoniobnoni@gmail.com
         </a>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction A — Brutalist / Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --paper-2: #ede8da;
+    --ink: #0e0e0d;
+    --ink-2: #4a4945;
+    --ink-3: #8a8880;
+    --rule: #c8c2b0;
+    --accent: #a8261f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  /* GRID CONTAINER */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* TYPE */
+  .serif { font-family: 'Fraunces', serif; font-feature-settings: "ss01"; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-2);
+  }
+  .number-big {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 1.25rem 0;
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 50;
+  }
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  nav .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+  nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  nav a:hover::after { width: 100%; }
+  nav a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 0 4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .col-issue {
+    grid-column: 1 / span 2;
+    border-right: 1px solid var(--rule);
+    padding-right: 1.5rem;
+  }
+  .hero .col-issue .issue-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .hero .col-issue .issue-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 0.5rem;
+    color: var(--ink-2);
+  }
+  .hero .col-main {
+    grid-column: 3 / span 10;
+  }
+  .hero .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+    font-weight: 400;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin-bottom: 2.5rem;
+  }
+  .hero h1 .italic { font-style: italic; color: var(--accent); font-weight: 300; }
+  .hero .lede {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    max-width: 38ch;
+    margin-bottom: 3rem;
+    color: var(--ink-2);
+  }
+  .hero .meta-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    max-width: 700px;
+  }
+  .hero .meta-row dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-3);
+    margin-bottom: 0.4rem;
+  }
+  .hero .meta-row dd {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    padding: 5rem 0 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+    align-items: end;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4rem;
+  }
+  .section-header .num {
+    grid-column: 1 / span 2;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .section-header h2 {
+    grid-column: 3 / span 10;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .section-header h2 .italic { font-style: italic; }
+
+  /* ABOUT */
+  .about-body {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+  .about-body .col-text {
+    grid-column: 3 / span 7;
+    column-count: 1;
+  }
+  .about-body p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    color: var(--ink);
+  }
+  .about-body p:first-of-type::first-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    float: left;
+    font-size: 5rem;
+    line-height: 0.85;
+    padding: 0.3rem 0.8rem 0 0;
+    color: var(--accent);
+  }
+  .about-body .col-sidebar {
+    grid-column: 10 / span 3;
+  }
+  .about-body .col-sidebar dl {
+    border-top: 1px solid var(--rule);
+  }
+  .about-body .col-sidebar div.row {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.75rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .about-body .col-sidebar dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-2);
+  }
+  .about-body .col-sidebar dd {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* SKILLS BLOCK */
+  .skills {
+    grid-column: 3 / span 10;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  .skills h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-2);
+    margin-bottom: 1rem;
+  }
+  .skills .list {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .skills .list span:not(:last-child)::after {
+    content: ' · ';
+    color: var(--accent);
+    font-style: italic;
+    padding: 0 0.2rem;
+  }
+
+  /* PROJECTS LIST */
+  .projects-list {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+  .project-row {
+    grid-column: 1 / span 12;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .project-row:hover {
+    background: var(--paper-2);
+  }
+  .project-row:hover .project-title { color: var(--accent); }
+  .project-row .project-num {
+    grid-column: 1 / span 1;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .project-row .project-meta {
+    grid-column: 2 / span 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-2);
+    padding-top: 0.5rem;
+  }
+  .project-row .project-meta .year { display: block; color: var(--ink); margin-bottom: 0.4rem; font-size: 0.8rem; }
+  .project-row .project-title {
+    grid-column: 4 / span 5;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 2.25rem;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+  }
+  .project-row .project-desc {
+    grid-column: 4 / span 5;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .project-row .project-tech {
+    grid-column: 10 / span 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-2);
+    text-align: right;
+    padding-top: 0.5rem;
+  }
+  .project-row .project-tech .pill {
+    display: inline-block;
+    margin: 0 0 0.3rem 0.3rem;
+  }
+  .project-row.featured {
+    background: var(--paper-2);
+    padding: 3rem 2rem;
+    margin: 1rem 0;
+    border: 1px solid var(--rule);
+  }
+  .project-row.featured:hover {
+    background: var(--paper);
+  }
+  .project-row.featured .project-title { font-size: 3rem; }
+  .featured-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    background: var(--accent);
+    color: var(--paper);
+    padding: 0.25rem 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 8rem 0 6rem;
+    text-align: center;
+    border-top: 1px solid var(--rule);
+    margin-top: 5rem;
+  }
+  .contact .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+  .contact h2 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 1;
+    margin-bottom: 2rem;
+  }
+  .contact .mail {
+    font-family: 'Fraunces', serif;
+    font-size: 1.75rem;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
+    text-decoration-color: var(--rule);
+    color: var(--ink);
+  }
+  .contact .mail:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer a { color: var(--ink); text-decoration: none; margin-left: 1.5rem; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .hero .col-issue, .hero .col-main { grid-column: 1 / -1; border: none; padding: 0; }
+    .hero .col-issue { margin-bottom: 1.5rem; }
+    .section-header .num, .section-header h2 { grid-column: 1 / -1; }
+    .about-body .col-text, .about-body .col-sidebar, .skills { grid-column: 1 / -1; }
+    .project-row .project-num { grid-column: 1; }
+    .project-row .project-meta { grid-column: 2 / -1; padding-top: 0; }
+    .project-row .project-title,
+    .project-row .project-desc,
+    .project-row .project-tech { grid-column: 1 / -1; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="brand"><em>A.</em>Batarilović</div>
+    <ul>
+      <li><a href="#about">/ O meni</a></li>
+      <li><a href="#work">/ Radovi</a></li>
+      <li><a href="#contact">/ Kontakt</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container grid-12">
+    <div class="col-issue">
+      <div class="issue-num">01</div>
+      <div class="issue-label">Issue<br/>Vol. 2026</div>
+    </div>
+    <div class="col-main">
+      <div class="kicker">— Frontend Developer · Zagreb, HR</div>
+      <h1>
+        Antonio <span class="italic">Batarilović</span>—<br/>
+        gradi <span class="italic">stvari</span> za web.
+      </h1>
+      <p class="lede">
+        Student treće godine FER-a u Zagrebu, trenutno na Sofascore Frontend Academy. Najviše me veseli cijeli proces izrade aplikacije, od ideje do deploya.
+      </p>
+      <dl class="meta-row">
+        <div><dt>Lokacija</dt><dd>Zagreb, HR</dd></div>
+        <div><dt>Status</dt><dd>Otvoren za prilike</dd></div>
+        <div><dt>Edukacija</dt><dd>FER · 3. god.</dd></div>
+        <div><dt>Trenutno</dt><dd>Sofascore Academy</dd></div>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">02</div>
+      <h2><span class="italic">O meni —</span> radoznali full-stack.</h2>
+    </div>
+    <div class="about-body">
+      <div class="col-text">
+        <p>
+          Trenutno sam na trećoj godini Fakulteta elektrotehnike i računarstva u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz Shift Nudge tečaj.
+        </p>
+        <p>
+          Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya. Većinu projekata pokrećem iz vlastite radoznalosti.
+        </p>
+      </div>
+      <aside class="col-sidebar">
+        <dl>
+          <div class="row"><dt>Lokacija</dt><dd>Zagreb, HR</dd></div>
+          <div class="row"><dt>Status</dt><dd>Open</dd></div>
+          <div class="row"><dt>Edukacija</dt><dd>FER · 3. god.</dd></div>
+          <div class="row"><dt>Trenutno</dt><dd>Sofascore Acad.</dd></div>
+          <div class="row"><dt>Engleski</dt><dd>B2</dd></div>
+          <div class="row"><dt>CV</dt><dd><a href="/cv.pdf" style="color: var(--accent);">Preuzmi ↓</a></dd></div>
+        </dl>
+      </aside>
+      <div class="skills">
+        <h3>// Frontend</h3>
+        <div class="list">
+          <span>React</span><span>Next.js</span><span>TypeScript</span><span>JavaScript</span><span>HTML5</span><span>CSS3</span><span>TanStack Router</span><span>PandaCSS</span><span>Tailwind</span>
+        </div>
+        <h3>// Backend & Data</h3>
+        <div class="list">
+          <span>Node.js</span><span>Express</span><span>PostgreSQL</span><span>MongoDB</span><span>Python</span><span>BeautifulSoup</span>
+        </div>
+        <h3>// Design & Tools</h3>
+        <div class="list">
+          <span>Figma</span><span>UI/UX</span><span>Git</span><span>Blender</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="container">
+    <div class="section-header">
+      <div class="num">03</div>
+      <h2><span class="italic">Odabrani</span> radovi —</h2>
+    </div>
+    <div class="projects-list">
+      <a class="project-row featured" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2026</span>
+          Sofascore Academy
+        </div>
+        <div>
+          <div class="featured-badge">Featured</div>
+          <h3 class="project-title">Sofascore Canteen</h3>
+          <p class="project-desc">Web aplikacija koja zaposlenicima omogućuje organizaciju tjednih obroka, a catering službi uvid u narudžbe radi pripreme jela. Razvijeno u sklopu Sofascore Frontend Academy.</p>
+        </div>
+        <div class="project-tech">
+          <span class="pill">React</span>
+          <span class="pill">PandaCSS</span>
+          <span class="pill">TanStack Router</span>
+          <span class="pill">SWR</span>
+          <span class="pill">Zustand</span>
+        </div>
+      </a>
+
+      <a class="project-row featured" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2026</span>
+          Data Viz
+        </div>
+        <div>
+          <div class="featured-badge">Featured</div>
+          <h3 class="project-title">USA Elections</h3>
+          <p class="project-desc">Vizualizacija rezultata svih predsjedničkih izbora u SAD-u od 1789. do 2024. godine. Podaci scrapeani s National Archivesa, prikazani kroz interaktivnu kartu saveznih država s mogućnošću usporedbe dvaju izbora.</p>
+        </div>
+        <div class="project-tech">
+          <span class="pill">Python</span>
+          <span class="pill">BS4</span>
+          <span class="pill">PostgreSQL</span>
+          <span class="pill">Express</span>
+          <span class="pill">React</span>
+          <span class="pill">D3</span>
+        </div>
+      </a>
+
+      <a class="project-row" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2025</span>
+          Web App
+        </div>
+        <h3 class="project-title">GearShare</h3>
+        <p class="project-desc">Web platforma koja povezuje trgovce sezonskom sportskom opremom s klijentima - rezervacije, online naplata i dogovor preuzimanja.</p>
+        <div class="project-tech">
+          <span class="pill">React</span>
+          <span class="pill">Spring Boot</span>
+          <span class="pill">PostgreSQL</span>
+        </div>
+      </a>
+
+      <a class="project-row" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2026</span>
+          Web App
+        </div>
+        <h3 class="project-title">LearnFlow</h3>
+        <p class="project-desc">Planer učenja za studente - praćenje dnevnog plana i stvarno utrošenog vremena uz generiranje grafova aktivnosti.</p>
+        <div class="project-tech">
+          <span class="pill">Node.js</span>
+          <span class="pill">Express</span>
+          <span class="pill">PostgreSQL</span>
+        </div>
+      </a>
+
+      <a class="project-row" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2024</span>
+          Web App
+        </div>
+        <h3 class="project-title">SpotiLens</h3>
+        <p class="project-desc">Full-stack aplikacija spojena na Spotify API - prikazuje statistiku slušanja artista, pjesama i albuma s mogućnošću uploada dodatnih podataka.</p>
+        <div class="project-tech">
+          <span class="pill">React</span>
+          <span class="pill">Node.js</span>
+          <span class="pill">MongoDB</span>
+        </div>
+      </a>
+
+      <a class="project-row" href="#">
+        <div class="project-num">↗</div>
+        <div class="project-meta">
+          <span class="year">2023</span>
+          Scraping
+        </div>
+        <h3 class="project-title">NBA Scraper</h3>
+        <p class="project-desc">Automatizirani scraper koji prikuplja podatke o NBA utakmicama i prikazuje ih kroz jednostavan web prikaz.</p>
+        <div class="project-tech">
+          <span class="pill">Python</span>
+          <span class="pill">Selenium</span>
+          <span class="pill">BS4</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="kicker">— 04 / Kontakt</div>
+    <h2>Reci <em>bok.</em></h2>
+    <a class="mail" href="mailto:antoniobnoni@gmail.com">antoniobnoni@gmail.com</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>Dizajn &amp; razvoj — Antonio Batarilović · MMXXVI</span>
+    <span>
+      <a href="https://github.com/SigmaGrindset">GitHub</a>
+      <a href="https://www.linkedin.com/in/antonio-batarilovi%C4%87-509a26240/">LinkedIn</a>
+      <a href="mailto:antoniobnoni@gmail.com">Email</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

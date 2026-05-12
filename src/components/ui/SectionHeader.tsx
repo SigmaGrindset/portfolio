@@ -7,6 +7,7 @@ export function SectionHeader({ num, title }: { num: string; title: string }) {
 
   useGSAP(
     () => {
+      gsap.set(['[data-sh="num"]', '[data-sh="title"]'], { autoAlpha: 0, y: 20 });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
@@ -15,27 +16,39 @@ export function SectionHeader({ num, title }: { num: string; title: string }) {
         },
         defaults: { ease: 'power3.out' },
       });
-
-      tl.from('[data-sh="num"]', { y: 20, opacity: 0, duration: 0.6 })
-        .from('[data-sh="title"]', { y: 20, opacity: 0, duration: 0.7 }, '-=0.4')
-        .from(
-          '[data-sh="line"]',
-          { scaleX: 0, transformOrigin: 'left center', duration: 0.9 },
-          '-=0.5',
-        );
+      tl.to('[data-sh="num"]', { y: 0, autoAlpha: 1, duration: 0.6 }).to(
+        '[data-sh="title"]',
+        { y: 0, autoAlpha: 1, duration: 0.7 },
+        '-=0.4',
+      );
     },
     { scope: root },
   );
 
+  // Split title to allow italic accent on first word
+  const parts = title.split(' ');
+  const firstWord = parts[0];
+  const rest = parts.slice(1).join(' ');
+
   return (
-    <div ref={root} className="flex items-center gap-4 mb-12">
-      <span data-sh="num" className="font-mono text-base text-accent">
-        {num}
-      </span>
-      <h3 data-sh="title" className="text-2xl md:text-3xl font-bold tracking-tight">
-        {title}
-      </h3>
-      <span data-sh="line" className="flex-1 h-px bg-border" />
+    <div
+      ref={root}
+      className="pt-20 pb-8 grid grid-cols-12 gap-6 items-end border-b-2 border-fg mb-16"
+    >
+      <div
+        data-sh="num"
+        className="col-span-2 font-serif font-light italic text-accent text-5xl md:text-6xl leading-none"
+      >
+        {num.replace('.', '')}
+      </div>
+      <h2
+        data-sh="title"
+        className="col-span-10 font-serif font-normal text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] tracking-tight"
+      >
+        <em className="italic">{firstWord}</em>
+        {rest && <span> {rest}</span>}
+        {' —'}
+      </h2>
     </div>
   );
 }

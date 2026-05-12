@@ -1,76 +1,40 @@
 import { useRef } from 'react';
-import { ArrowRight, Mail } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation } from '@/i18n/i18n';
-
-const HERO_IMAGE_SRC =
-  'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=800&q=80';
 
 export function Hero() {
   const { t } = useTranslation();
   const root = useRef<HTMLElement | null>(null);
 
-  const nameParts = t.hero.name.trim().replace(/\.$/, '').split(' ');
-  const firstName = nameParts[0];
-  const lastName = (nameParts.slice(1).join(' ') || '') + '.';
+  // Split "Antonio Batarilović." -> first + last
+  const parts = t.hero.name.trim().replace(/\.$/, '').split(' ');
+  const firstName = parts[0];
+  const lastName = parts.slice(1).join(' ');
 
   useGSAP(
     () => {
-      // Set initial states deterministically to avoid CSS transition conflicts
       gsap.set(
         [
-          '[data-hero="eyebrow"]',
-          '[data-hero="name-line"]',
-          '[data-hero="image-wrap"]',
-          '[data-hero="badge"]',
-          '[data-hero="tagline"]',
-          '[data-hero="intro"]',
-          '[data-hero="actions"] > *',
+          '[data-hero="issue"]',
+          '[data-hero="kicker"]',
+          '[data-hero="title"]',
+          '[data-hero="lede"]',
+          '[data-hero="meta"] > *',
         ],
         { autoAlpha: 0, y: 20 },
       );
-      gsap.set('[data-hero="name-line"]', { y: 80 });
-      gsap.set('[data-hero="image-wrap"]', { y: 30, scale: 0.85, rotation: -2 });
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-      tl.to('[data-hero="eyebrow"]', { y: 0, autoAlpha: 1, duration: 0.6 })
+      tl.to('[data-hero="issue"]', { y: 0, autoAlpha: 1, duration: 0.6 })
+        .to('[data-hero="kicker"]', { y: 0, autoAlpha: 1, duration: 0.5 }, '-=0.3')
+        .to('[data-hero="title"]', { y: 0, autoAlpha: 1, duration: 0.9 }, '-=0.3')
+        .to('[data-hero="lede"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
         .to(
-          '[data-hero="name-line"]',
-          { y: 0, autoAlpha: 1, duration: 1.1, stagger: 0.12 },
-          '-=0.3',
-        )
-        .to(
-          '[data-hero="image-wrap"]',
-          {
-            y: 0,
-            scale: 1,
-            rotation: 3,
-            autoAlpha: 1,
-            duration: 1.1,
-            ease: 'back.out(1.2)',
-          },
-          '-=0.8',
-        )
-        .to('[data-hero="badge"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.6')
-        .to('[data-hero="tagline"]', { y: 0, autoAlpha: 1, duration: 0.8 }, '-=0.5')
-        .to('[data-hero="intro"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
-        .to(
-          '[data-hero="actions"] > *',
-          { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.1 },
+          '[data-hero="meta"] > *',
+          { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08 },
           '-=0.4',
         );
-
-      // Subtle float on the image card for editorial feel
-      gsap.to('[data-hero="image-wrap"]', {
-        y: -10,
-        duration: 3,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-        delay: 2.5,
-      });
     },
     { scope: root },
   );
@@ -79,90 +43,77 @@ export function Hero() {
     <header
       ref={root}
       id="top"
-      className="relative min-h-[88vh] flex items-center py-24 overflow-hidden"
+      className="py-16 md:py-24 border-b border-rule"
     >
-      <div className="max-w-[1100px] mx-auto px-8 w-full">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 grid grid-cols-12 gap-6">
+        {/* Issue marker (left column) */}
         <div
-          data-hero="eyebrow"
-          className="font-mono text-sm text-accent mb-6"
+          data-hero="issue"
+          className="col-span-12 md:col-span-2 md:border-r md:border-rule md:pr-6"
         >
-          {t.hero.eyebrow}
-        </div>
-
-        {/* Name + overlapping image */}
-        <div className="relative isolate mb-10">
-          <h1 className="relative z-10 font-extrabold tracking-[-0.04em] leading-[0.88] text-[clamp(3.5rem,12vw,9.5rem)]">
-            <span data-hero="name-line" className="block">
-              {firstName}
-            </span>
-            <span data-hero="name-line" className="block">
-              {lastName}
-            </span>
-          </h1>
-
-          {/* Floating image card - sits behind the name */}
-          <div
-            data-hero="image-wrap"
-            className="absolute z-0 top-[6%] right-[2%] sm:right-[6%] lg:right-[8%] w-[42vw] sm:w-[34vw] md:w-[28vw] lg:w-[22vw] xl:w-[260px] max-w-[280px] aspect-4/5 rotate-3"
-          >
-            <div className="relative w-full h-full rounded-xl overflow-hidden border border-border bg-surface shadow-2xl shadow-black/40">
-              <img
-                src={HERO_IMAGE_SRC}
-                alt="Antonio Batarilović - placeholder"
-                className="w-full h-full object-cover grayscale-15 contrast-[1.05]"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{
-                  padding: '1px',
-                  background:
-                    'linear-gradient(135deg, var(--color-accent), transparent 60%)',
-                  WebkitMask:
-                    'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
-                }}
-              />
-            </div>
-
-            <div
-              data-hero="badge"
-              className="absolute -bottom-4 -left-4 sm:-left-6 bg-bg border border-border rounded-md px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-secondary -rotate-2"
-            >
-              <span className="text-accent">(01)</span>{' '}
-              Frontend Dev
-            </div>
+          <div className="font-serif font-light italic text-accent text-5xl md:text-6xl leading-none">
+            01
+          </div>
+          <div className="font-mono text-[0.7rem] uppercase tracking-[0.2em] mt-2 text-fg-secondary">
+            Issue<br />Vol. 2026
           </div>
         </div>
 
-        <h2
-          data-hero="tagline"
-          className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-fg-secondary mb-8 max-w-[700px]"
-        >
-          {t.hero.tagline}
-        </h2>
-        <p
-          data-hero="intro"
-          className="max-w-[600px] text-fg-secondary text-[1.05rem] mb-10"
-        >
-          {t.hero.intro}
-        </p>
-        <div data-hero="actions" className="flex flex-wrap gap-4">
-          <a
-            href="#projects"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:border-accent-hover hover:-translate-y-px transition-[background-color,border-color,color,transform] duration-200"
+        {/* Main editorial column */}
+        <div className="col-span-12 md:col-span-10">
+          <div
+            data-hero="kicker"
+            className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-6"
           >
-            {t.hero.ctaProjects}
-            <ArrowRight size={16} />
-          </a>
-          <a
-            href="mailto:antoniobnoni@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent hover:-translate-y-px transition-[background-color,border-color,color,transform] duration-200"
+            — Frontend Developer · Zagreb, HR
+          </div>
+
+          <h1
+            data-hero="title"
+            className="font-serif font-normal wonk text-[clamp(3rem,9vw,8rem)] leading-[0.95] tracking-[-0.025em] mb-8"
           >
-            <Mail size={16} />
-            {t.hero.ctaContact}
-          </a>
+            {firstName}{' '}
+            <em className="italic font-light text-accent">{lastName}</em>—
+            <br />
+            gradi <em className="italic font-light text-accent">stvari</em> za web.
+          </h1>
+
+          <p
+            data-hero="lede"
+            className="font-serif text-xl md:text-2xl leading-[1.4] max-w-[40ch] mb-12 text-fg-secondary"
+          >
+            {t.hero.intro}
+          </p>
+
+          <dl
+            data-hero="meta"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-rule max-w-[800px]"
+          >
+            <div>
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
+                Lokacija
+              </dt>
+              <dd className="text-sm font-medium">Zagreb, HR</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
+                Status
+              </dt>
+              <dd className="text-sm font-medium">Otvoren za prilike</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
+                Edukacija
+              </dt>
+              <dd className="text-sm font-medium">FER · 3. god.</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
+                Trenutno
+              </dt>
+              <dd className="text-sm font-medium">Sofascore Academy</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </header>
