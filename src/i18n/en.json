@@ -33,7 +33,9 @@
     "current": "Currently",
     "currentValue": "Sofascore Academy",
     "english": "English",
-    "englishValue": "B2"
+    "englishValue": "B2",
+    "cv": "CV",
+    "cvValue": "Download"
   },
   "projects": {
     "title": "Projects",
@@ -45,6 +47,12 @@
     "text": "I'm currently open to opportunities - whether it's a project, an internship, or just a chat about frontend and design."
   },
   "footer": "Design and development - Antonio Batarilović",
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
   "project": {
     "back": "Back to projects",
     "github": "GitHub",

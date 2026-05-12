@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
+import { Download } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation } from '@/i18n/i18n';
@@ -76,7 +77,21 @@ export function About() {
             <InfoRow label={t.about.status} value={t.about.statusValue} />
             <InfoRow label={t.about.education} value={t.about.educationValue} />
             <InfoRow label={t.about.current} value={t.about.currentValue} />
-            <InfoRow label={t.about.english} value={t.about.englishValue} last />
+            <InfoRow label={t.about.english} value={t.about.englishValue} />
+            <InfoRow
+              label={t.about.cv}
+              value={
+                <a
+                  href="/cv.pdf"
+                  download
+                  className="inline-flex items-center gap-1.5 text-accent hover:text-accent-hover transition-colors"
+                >
+                  {t.about.cvValue}
+                  <Download size={14} />
+                </a>
+              }
+              last
+            />
           </aside>
         </div>
       </div>
@@ -99,7 +114,7 @@ function SkillGroup({ label, items }: { label: string; items: readonly string[] 
   );
 }
 
-function InfoRow({ label, value, last }: { label: string; value: string; last?: boolean }) {
+function InfoRow({ label, value, last }: { label: string; value: ReactNode; last?: boolean }) {
   return (
     <div
       className={

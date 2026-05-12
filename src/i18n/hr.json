@@ -33,7 +33,9 @@
     "current": "Trenutno",
     "currentValue": "Sofascore Academy",
     "english": "Engleski",
-    "englishValue": "B2"
+    "englishValue": "B2",
+    "cv": "CV",
+    "cvValue": "Preuzmi"
   },
   "projects": {
     "title": "Projekti",
@@ -45,6 +47,12 @@
     "text": "Trenutno sam otvoren za prilike - bilo da je riječ o projektu, praksi ili samo razgovoru o frontendu i dizajnu."
   },
   "footer": "Dizajn i razvoj - Antonio Batarilović",
+  "notFound": {
+    "code": "404",
+    "title": "Stranica nije pronađena",
+    "text": "Tražena stranica ne postoji ili je premještena.",
+    "backHome": "Natrag na početnu"
+  },
   "project": {
     "back": "Natrag na projekte",
     "github": "GitHub",

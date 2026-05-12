@@ -17,36 +17,48 @@ export function Hero() {
 
   useGSAP(
     () => {
+      // Set initial states deterministically to avoid CSS transition conflicts
+      gsap.set(
+        [
+          '[data-hero="eyebrow"]',
+          '[data-hero="name-line"]',
+          '[data-hero="image-wrap"]',
+          '[data-hero="badge"]',
+          '[data-hero="tagline"]',
+          '[data-hero="intro"]',
+          '[data-hero="actions"] > *',
+        ],
+        { autoAlpha: 0, y: 20 },
+      );
+      gsap.set('[data-hero="name-line"]', { y: 80 });
+      gsap.set('[data-hero="image-wrap"]', { y: 30, scale: 0.85, rotation: -2 });
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.from('[data-hero="eyebrow"]', { y: 20, opacity: 0, duration: 0.6 })
-        .from(
+      tl.to('[data-hero="eyebrow"]', { y: 0, autoAlpha: 1, duration: 0.6 })
+        .to(
           '[data-hero="name-line"]',
-          { y: 80, opacity: 0, duration: 1.1, stagger: 0.12 },
+          { y: 0, autoAlpha: 1, duration: 1.1, stagger: 0.12 },
           '-=0.3',
         )
-        .from(
+        .to(
           '[data-hero="image-wrap"]',
           {
-            scale: 0.85,
-            rotation: -2,
-            y: 30,
-            opacity: 0,
+            y: 0,
+            scale: 1,
+            rotation: 3,
+            autoAlpha: 1,
             duration: 1.1,
             ease: 'back.out(1.2)',
           },
           '-=0.8',
         )
-        .from(
-          '[data-hero="badge"]',
-          { y: 20, opacity: 0, duration: 0.7 },
-          '-=0.6',
-        )
-        .from('[data-hero="tagline"]', { y: 30, opacity: 0, duration: 0.8 }, '-=0.5')
-        .from('[data-hero="intro"]', { y: 20, opacity: 0, duration: 0.7 }, '-=0.5')
-        .from(
+        .to('[data-hero="badge"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.6')
+        .to('[data-hero="tagline"]', { y: 0, autoAlpha: 1, duration: 0.8 }, '-=0.5')
+        .to('[data-hero="intro"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
+        .to(
           '[data-hero="actions"] > *',
-          { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 },
+          { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.1 },
           '-=0.4',
         );
 
@@ -139,14 +151,14 @@ export function Hero() {
         <div data-hero="actions" className="flex flex-wrap gap-4">
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:border-accent-hover hover:-translate-y-px transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:border-accent-hover hover:-translate-y-px transition-[background-color,border-color,color,transform] duration-200"
           >
             {t.hero.ctaProjects}
             <ArrowRight size={16} />
           </a>
           <a
             href="mailto:antoniobnoni@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent hover:-translate-y-px transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent hover:-translate-y-px transition-[background-color,border-color,color,transform] duration-200"
           >
             <Mail size={16} />
             {t.hero.ctaContact}
