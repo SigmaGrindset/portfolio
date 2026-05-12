@@ -37,6 +37,10 @@
   html {
     scroll-behavior: smooth;
   }
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    color: var(--color-fg);
+  }
   body {
     background: var(--color-bg);
     color: var(--color-fg);
