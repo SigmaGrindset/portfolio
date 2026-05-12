@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "eyebrow": "Hi, I'm",
+    "name": "Antonio Batarilović.",
+    "tagline": "I build things for the web.",
+    "intro": "Third-year student at FER in Zagreb, currently attending the Sofascore Frontend Academy. I tend to end up on the frontend, but I'm just as interested in backend and interface design. What I enjoy most is the whole process of building an app, from idea to deploy.",
+    "ctaProjects": "See projects",
+    "ctaContact": "Get in touch"
+  },
+  "about": {
+    "title": "About me",
+    "p1Pre": "I'm currently a third-year student at the ",
+    "p1Bold1": "Faculty of Electrical Engineering and Computing",
+    "p1Mid": " in Zagreb. Lately I work mostly with React and TypeScript, and I deepened my UI/UX knowledge through the ",
+    "p1Bold2": "Shift Nudge",
+    "p1Post": " course.",
+    "p2": "It turned out I spend most of my time on the frontend, but I'm equally interested in backend and interface design. What I enjoy most is following the whole process of building an application, from the first idea to deployment. Most of my projects start from personal curiosity.",
+    "frontend": "Frontend",
+    "backend": "Backend & Data",
+    "design": "Design & Tools",
+    "info": "Info",
+    "location": "Location",
+    "locationValue": "Zagreb, HR",
+    "status": "Status",
+    "statusValue": "Open to opportunities",
+    "education": "Education",
+    "educationValue": "FER · 3rd year",
+    "current": "Currently",
+    "currentValue": "Sofascore Academy",
+    "english": "English",
+    "englishValue": "B2"
+  },
+  "projects": {
+    "title": "Projects",
+    "featured": "Featured"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Say hello.",
+    "text": "I'm currently open to opportunities - whether it's a project, an internship, or just a chat about frontend and design."
+  },
+  "footer": "Design and development - Antonio Batarilović",
+  "project": {
+    "back": "Back to projects",
+    "github": "GitHub",
+    "live": "Live",
+    "role": "Role",
+    "context": "Context",
+    "year": "Year",
+    "status": "Status",
+    "statusLive": "Live",
+    "statusArchived": "Archived",
+    "statusDev": "In development",
+    "overview": "Overview",
+    "features": "Features",
+    "stack": "Tech stack",
+    "gallery": "Gallery",
+    "prev": "Previous project",
+    "next": "Next project",
+    "notFound": "Project not found",
+    "notFoundText": "The page you are looking for does not exist."
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "about": "O meni",
+    "projects": "Projekti",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "eyebrow": "Bok, ja sam",
+    "name": "Antonio Batarilović.",
+    "tagline": "Gradim stvari za web.",
+    "intro": "Student treće godine FER-a u Zagrebu, trenutno na Sofascore Frontend Academy. Iako najčešće radim na frontendu, jednako me zanima backend i dizajn sučelja. Najviše me veseli cijeli proces izrade aplikacije, od ideje do deploya.",
+    "ctaProjects": "Pogledaj projekte",
+    "ctaContact": "Kontaktiraj me"
+  },
+  "about": {
+    "title": "O meni",
+    "p1Pre": "Trenutno sam na trećoj godini ",
+    "p1Bold1": "Fakulteta elektrotehnike i računarstva",
+    "p1Mid": " u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz ",
+    "p1Bold2": "Shift Nudge",
+    "p1Post": " tečaj.",
+    "p2": "Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya. Većinu projekata pokrećem iz vlastite radoznalosti.",
+    "frontend": "Frontend",
+    "backend": "Backend & Data",
+    "design": "Design & Tools",
+    "info": "Info",
+    "location": "Lokacija",
+    "locationValue": "Zagreb, HR",
+    "status": "Status",
+    "statusValue": "Otvoren za prilike",
+    "education": "Edukacija",
+    "educationValue": "FER · 3. god.",
+    "current": "Trenutno",
+    "currentValue": "Sofascore Academy",
+    "english": "Engleski",
+    "englishValue": "B2"
+  },
+  "projects": {
+    "title": "Projekti",
+    "featured": "Featured"
+  },
+  "contact": {
+    "eyebrow": "Kontakt",
+    "title": "Reci bok.",
+    "text": "Trenutno sam otvoren za prilike - bilo da je riječ o projektu, praksi ili samo razgovoru o frontendu i dizajnu."
+  },
+  "footer": "Dizajn i razvoj - Antonio Batarilović",
+  "project": {
+    "back": "Natrag na projekte",
+    "github": "GitHub",
+    "live": "Live",
+    "role": "Uloga",
+    "context": "Kontekst",
+    "year": "Godina",
+    "status": "Status",
+    "statusLive": "Aktivan",
+    "statusArchived": "Arhiviran",
+    "statusDev": "U razvoju",
+    "overview": "Pregled",
+    "features": "Funkcionalnosti",
+    "stack": "Tehnologije",
+    "gallery": "Galerija",
+    "prev": "Prethodni projekt",
+    "next": "Sljedeći projekt",
+    "notFound": "Projekt nije pronađen",
+    "notFoundText": "Tražena stranica ne postoji."
+  }
+}
