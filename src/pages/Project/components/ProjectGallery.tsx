@@ -21,7 +21,7 @@ export function ProjectGallery({ images, num }: { images: string[]; num: string 
               key={src}
               data-gallery-item
               className={
-                'group relative aspect-[16/10] overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] ' +
+                'group relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-surface ' +
                 (i === 0 ? 'md:col-span-2 md:aspect-[21/9]' : '')
               }
             >

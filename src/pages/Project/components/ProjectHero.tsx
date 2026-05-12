@@ -10,7 +10,7 @@ const statusStyle: Record<ProjectDetail['status'], string> = {
   live: 'text-green-400 border-green-400/30 bg-green-400/10',
   dev: 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10',
   archived:
-    'text-[color:var(--color-text-tertiary)] border-[color:var(--color-border)] bg-[color:var(--color-surface)]',
+    'text-fg-tertiary border-border bg-surface',
 };
 
 const buttonTransition =
@@ -68,13 +68,13 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
           to="/"
           hash="projects"
           data-ph="back"
-          className="inline-flex items-center gap-2 text-sm font-mono text-[color:var(--color-text-secondary)] hover:text-[color:var(--color-accent)] transition-colors mb-10"
+          className="inline-flex items-center gap-2 text-sm font-mono text-fg-secondary hover:text-accent transition-colors mb-10"
         >
           <ArrowLeft size={14} />
           {t.project.back}
         </Link>
 
-        <div data-ph="category" className="font-mono text-sm text-[color:var(--color-accent)] mb-4">
+        <div data-ph="category" className="font-mono text-sm text-accent mb-4">
           {project.category}
         </div>
 
@@ -87,7 +87,7 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
 
         <p
           data-ph="desc"
-          className="text-[color:var(--color-text-secondary)] text-lg max-w-[720px] mb-10"
+          className="text-fg-secondary text-lg max-w-[720px] mb-10"
         >
           {l(project.shortDesc)}
         </p>
@@ -119,7 +119,7 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
               target="_blank"
               rel="noreferrer"
               className={
-                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-[color:var(--color-surface)] text-[color:var(--color-text)] border border-[color:var(--color-border)] hover:border-[color:var(--color-accent)] ' +
+                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent ' +
                 buttonTransition
               }
             >
@@ -133,7 +133,7 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
               target="_blank"
               rel="noreferrer"
               className={
-                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-[color:var(--color-accent)] text-white border border-[color:var(--color-accent)] hover:bg-[color:var(--color-accent-hover)] ' +
+                'inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover ' +
                 buttonTransition
               }
             >
@@ -150,10 +150,10 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
 function MetaBlock({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-[color:var(--color-text-tertiary)] mb-2">
+      <div className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-tertiary mb-2">
         {label}
       </div>
-      <div className="text-sm text-[color:var(--color-text)] font-medium">{value}</div>
+      <div className="text-sm text-fg font-medium">{value}</div>
     </div>
   );
 }

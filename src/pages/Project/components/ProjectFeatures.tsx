@@ -17,11 +17,11 @@ export function ProjectFeatures({ features, num }: { features: Loc[]; num: strin
             <li
               key={i}
               data-feature
-              className="flex items-start gap-3 text-[color:var(--color-text-secondary)]"
+              className="flex items-start gap-3 text-fg-secondary"
             >
               <Check
                 size={18}
-                className="text-[color:var(--color-accent)] mt-0.5 flex-shrink-0"
+                className="text-accent mt-0.5 flex-shrink-0"
               />
               <span>{l(f)}</span>
             </li>

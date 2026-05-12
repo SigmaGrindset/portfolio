@@ -67,7 +67,7 @@ function ProjectCard({ project }: { project: ProjectDetail }) {
       params={{ slug }}
       data-project-card
       className={
-        'group relative bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-xl transition-all duration-300 hover:border-[color:var(--color-accent)] hover:-translate-y-1 overflow-hidden block ' +
+        'group relative bg-surface border border-border rounded-xl transition-all duration-300 hover:border-accent hover:-translate-y-1 overflow-hidden block ' +
         (featured ? 'p-8' : 'p-6 flex flex-col gap-4')
       }
     >
@@ -82,7 +82,7 @@ function ProjectCard({ project }: { project: ProjectDetail }) {
       <div className="relative flex justify-between items-start mb-3">
         <div>
           {featured && category && (
-            <div className="font-mono text-xs text-[color:var(--color-accent)] mb-1.5">
+            <div className="font-mono text-xs text-accent mb-1.5">
               {t.projects.featured} · {category}
             </div>
           )}
@@ -92,14 +92,14 @@ function ProjectCard({ project }: { project: ProjectDetail }) {
         </div>
         <span
           aria-hidden
-          className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-[color:var(--color-border)] text-[color:var(--color-text-secondary)] group-hover:border-[color:var(--color-accent)] group-hover:text-[color:var(--color-accent)] transition-colors flex-shrink-0"
+          className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary group-hover:border-accent group-hover:text-accent transition-colors flex-shrink-0"
         >
           <ArrowUpRight size={16} />
         </span>
       </div>
       <p
         className={
-          'relative text-[color:var(--color-text-secondary)] ' +
+          'relative text-fg-secondary ' +
           (featured ? 'text-[0.95rem] mb-6' : 'text-sm flex-1')
         }
       >

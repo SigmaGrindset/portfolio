@@ -72,32 +72,32 @@ export function Hero() {
       <div className="max-w-[1100px] mx-auto px-8 w-full">
         <div
           data-hero="eyebrow"
-          className="font-mono text-sm text-[color:var(--color-accent)] mb-6"
+          className="font-mono text-sm text-accent mb-6"
         >
           {t.hero.eyebrow}
         </div>
 
         {/* Name + overlapping image */}
-        <div className="relative mb-10">
-          <h1 className="font-extrabold tracking-[-0.04em] leading-[0.88] text-[clamp(3.5rem,12vw,9.5rem)]">
-            <span data-hero="name-line" className="block relative z-10">
+        <div className="relative isolate mb-10">
+          <h1 className="relative z-10 font-extrabold tracking-[-0.04em] leading-[0.88] text-[clamp(3.5rem,12vw,9.5rem)]">
+            <span data-hero="name-line" className="block">
               {firstName}
             </span>
-            <span data-hero="name-line" className="block relative z-30">
+            <span data-hero="name-line" className="block">
               {lastName}
             </span>
           </h1>
 
-          {/* Floating image card */}
+          {/* Floating image card - sits behind the name */}
           <div
             data-hero="image-wrap"
-            className="absolute z-20 top-[6%] right-[2%] sm:right-[6%] lg:right-[8%] w-[42vw] sm:w-[34vw] md:w-[28vw] lg:w-[22vw] xl:w-[260px] max-w-[280px] aspect-[4/5] rotate-[3deg]"
+            className="absolute z-0 top-[6%] right-[2%] sm:right-[6%] lg:right-[8%] w-[42vw] sm:w-[34vw] md:w-[28vw] lg:w-[22vw] xl:w-[260px] max-w-[280px] aspect-4/5 rotate-3"
           >
-            <div className="relative w-full h-full rounded-xl overflow-hidden border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-2xl shadow-black/40">
+            <div className="relative w-full h-full rounded-xl overflow-hidden border border-border bg-surface shadow-2xl shadow-black/40">
               <img
                 src={HERO_IMAGE_SRC}
                 alt="Antonio Batarilović - placeholder"
-                className="w-full h-full object-cover grayscale-[15%] contrast-[1.05]"
+                className="w-full h-full object-cover grayscale-15 contrast-[1.05]"
               />
               <div
                 aria-hidden
@@ -116,9 +116,9 @@ export function Hero() {
 
             <div
               data-hero="badge"
-              className="absolute -bottom-4 -left-4 sm:-left-6 bg-[color:var(--color-bg)] border border-[color:var(--color-border)] rounded-md px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-[color:var(--color-text-secondary)] -rotate-[2deg]"
+              className="absolute -bottom-4 -left-4 sm:-left-6 bg-bg border border-border rounded-md px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-secondary -rotate-2"
             >
-              <span className="text-[color:var(--color-accent)]">(01)</span>{' '}
+              <span className="text-accent">(01)</span>{' '}
               Frontend Dev
             </div>
           </div>
@@ -126,27 +126,27 @@ export function Hero() {
 
         <h2
           data-hero="tagline"
-          className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[color:var(--color-text-secondary)] mb-8 max-w-[700px]"
+          className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-fg-secondary mb-8 max-w-[700px]"
         >
           {t.hero.tagline}
         </h2>
         <p
           data-hero="intro"
-          className="max-w-[600px] text-[color:var(--color-text-secondary)] text-[1.05rem] mb-10"
+          className="max-w-[600px] text-fg-secondary text-[1.05rem] mb-10"
         >
           {t.hero.intro}
         </p>
         <div data-hero="actions" className="flex flex-wrap gap-4">
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-[color:var(--color-accent)] text-white border border-[color:var(--color-accent)] hover:bg-[color:var(--color-accent-hover)] hover:border-[color:var(--color-accent-hover)] hover:-translate-y-px transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:border-accent-hover hover:-translate-y-px transition-all"
           >
             {t.hero.ctaProjects}
             <ArrowRight size={16} />
           </a>
           <a
             href="mailto:antoniobnoni@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-[color:var(--color-surface)] text-[color:var(--color-text)] border border-[color:var(--color-border)] hover:border-[color:var(--color-accent)] hover:-translate-y-px transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-surface text-fg border border-border hover:border-accent hover:-translate-y-px transition-all"
           >
             <Mail size={16} />
             {t.hero.ctaContact}

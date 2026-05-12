@@ -29,13 +29,13 @@ export function SectionHeader({ num, title }: { num: string; title: string }) {
 
   return (
     <div ref={root} className="flex items-center gap-4 mb-12">
-      <span data-sh="num" className="font-mono text-base text-[color:var(--color-accent)]">
+      <span data-sh="num" className="font-mono text-base text-accent">
         {num}
       </span>
       <h3 data-sh="title" className="text-2xl md:text-3xl font-bold tracking-tight">
         {title}
       </h3>
-      <span data-sh="line" className="flex-1 h-px bg-[color:var(--color-border)]" />
+      <span data-sh="line" className="flex-1 h-px bg-border" />
     </div>
   );
 }

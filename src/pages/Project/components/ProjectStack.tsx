@@ -17,19 +17,19 @@ export function ProjectStack({ groups, num }: { groups: TechGroup[]; num: string
             <div
               key={i}
               data-stack-group
-              className="bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-xl p-6"
+              className="bg-surface border border-border rounded-xl p-6"
             >
-              <h4 className="font-mono text-xs uppercase tracking-[0.15em] text-[color:var(--color-accent)] mb-4">
+              <h4 className="font-mono text-xs uppercase tracking-[0.15em] text-accent mb-4">
                 // {l(g.label)}
               </h4>
               <ul className="space-y-3">
                 {g.items.map((item) => (
                   <li key={item.name} className="flex items-baseline gap-3">
-                    <span className="font-medium text-[color:var(--color-text)]">
+                    <span className="font-medium text-fg">
                       {item.name}
                     </span>
                     {item.note && (
-                      <span className="text-sm text-[color:var(--color-text-secondary)]">
+                      <span className="text-sm text-fg-secondary">
                         - {l(item.note)}
                       </span>
                     )}

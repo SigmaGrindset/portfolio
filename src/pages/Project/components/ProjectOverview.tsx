@@ -16,7 +16,7 @@ export function ProjectOverview({ paragraphs, num }: { paragraphs: Loc[]; num: s
             <p
               key={i}
               data-overview-p
-              className="text-[color:var(--color-text-secondary)] text-[1.05rem] leading-relaxed"
+              className="text-fg-secondary text-[1.05rem] leading-relaxed"
             >
               {l(p)}
             </p>

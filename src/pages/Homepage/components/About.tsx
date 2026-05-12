@@ -44,21 +44,21 @@ export function About() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 items-start">
           <div data-about="text">
-            <p className="text-[color:var(--color-text-secondary)] mb-4">
+            <p className="text-fg-secondary mb-4">
               {t.about.p1Pre}
-              <strong className="text-[color:var(--color-text)] font-semibold">{t.about.p1Bold1}</strong>
+              <strong className="text-fg font-semibold">{t.about.p1Bold1}</strong>
               {t.about.p1Mid}
               <a
                 href="https://shiftnudge.com/"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[color:var(--color-text)] font-semibold underline decoration-[color:var(--color-border)] underline-offset-4 hover:decoration-[color:var(--color-accent)] hover:text-[color:var(--color-accent)] transition-colors"
+                className="text-fg font-semibold underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
               >
                 {t.about.p1Bold2}
               </a>
               {t.about.p1Post}
             </p>
-            <p className="text-[color:var(--color-text-secondary)] mb-8">{t.about.p2}</p>
+            <p className="text-fg-secondary mb-8">{t.about.p2}</p>
 
             <SkillGroup label={t.about.frontend} items={skills.frontend} />
             <SkillGroup label={t.about.backend} items={skills.backend} />
@@ -67,9 +67,9 @@ export function About() {
 
           <aside
             data-about="card"
-            className="bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-xl p-7"
+            className="bg-surface border border-border rounded-xl p-7"
           >
-            <h4 className="text-xs uppercase tracking-[0.1em] text-[color:var(--color-text-tertiary)] mb-4">
+            <h4 className="text-xs uppercase tracking-[0.1em] text-fg-tertiary mb-4">
               {t.about.info}
             </h4>
             <InfoRow label={t.about.location} value={t.about.locationValue} />
@@ -87,7 +87,7 @@ export function About() {
 function SkillGroup({ label, items }: { label: string; items: readonly string[] }) {
   return (
     <div className="mt-8">
-      <div className="font-mono text-xs uppercase tracking-[0.1em] text-[color:var(--color-accent)] mb-3">
+      <div className="font-mono text-xs uppercase tracking-[0.1em] text-accent mb-3">
         // {label}
       </div>
       <div className="flex flex-wrap gap-2">
@@ -104,11 +104,11 @@ function InfoRow({ label, value, last }: { label: string; value: string; last?: 
     <div
       className={
         'flex justify-between items-baseline py-3 ' +
-        (last ? '' : 'border-b border-[color:var(--color-border)]')
+        (last ? '' : 'border-b border-border')
       }
     >
-      <span className="text-sm text-[color:var(--color-text-secondary)]">{label}</span>
-      <span className="text-sm font-medium text-[color:var(--color-text)]">{value}</span>
+      <span className="text-sm text-fg-secondary">{label}</span>
+      <span className="text-sm font-medium text-fg">{value}</span>
     </div>
   );
 }

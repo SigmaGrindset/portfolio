@@ -16,7 +16,7 @@ export function ProjectPage({ slug }: { slug: string }) {
       <section className="min-h-[60vh] flex items-center justify-center px-8 text-center">
         <div>
           <h1 className="text-4xl font-bold mb-3">{t.project.notFound}</h1>
-          <p className="text-[color:var(--color-text-secondary)]">{t.project.notFoundText}</p>
+          <p className="text-fg-secondary">{t.project.notFoundText}</p>
         </div>
       </section>
     );
