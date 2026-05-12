@@ -13,6 +13,9 @@ type Options = {
 /**
  * Reveal children (matching `selector`) when the container scrolls into view.
  * Returns a ref to attach to the container.
+ *
+ * Uses gsap.set + gsap.to (rather than gsap.from) to avoid conflicts with
+ * CSS `transition-all` on targets that toggle opacity/transform on hover.
  */
 export function useScrollReveal<T extends HTMLElement = HTMLElement>(opts: Options = {}) {
   const ref = useRef<T | null>(null);
@@ -24,9 +27,10 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(opts: Optio
         ? ref.current.querySelectorAll(opts.selector)
         : ref.current.children;
 
-      gsap.from(targets, {
-        y: opts.y ?? 30,
-        opacity: 0,
+      gsap.set(targets, { autoAlpha: 0, y: opts.y ?? 30 });
+      gsap.to(targets, {
+        y: 0,
+        autoAlpha: 1,
         duration: opts.duration ?? 0.9,
         stagger: opts.stagger ?? 0.08,
         scrollTrigger: {

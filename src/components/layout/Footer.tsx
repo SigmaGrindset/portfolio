@@ -1,4 +1,4 @@
-import { Github, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import { useTranslation } from '@/i18n/i18n';
 
 export function Footer() {
@@ -18,6 +18,15 @@ export function Footer() {
             className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary hover:border-accent hover:text-accent transition-colors"
           >
             <Github size={16} />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/antonio-batarilovi%C4%87-509a26240/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+            className="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-border text-fg-secondary hover:border-accent hover:text-accent transition-colors"
+          >
+            <Linkedin size={16} />
           </a>
           <a
             href="mailto:antoniobnoni@gmail.com"

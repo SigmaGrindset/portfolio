@@ -15,9 +15,10 @@ export function Projects() {
   useGSAP(
     () => {
       gsap.utils.toArray<HTMLElement>('[data-project-card]').forEach((card) => {
-        gsap.from(card, {
-          y: 40,
-          opacity: 0,
+        gsap.set(card, { autoAlpha: 0, y: 40 });
+        gsap.to(card, {
+          y: 0,
+          autoAlpha: 1,
           duration: 0.9,
           scrollTrigger: {
             trigger: card,
@@ -67,7 +68,7 @@ function ProjectCard({ project }: { project: ProjectDetail }) {
       params={{ slug }}
       data-project-card
       className={
-        'group relative bg-surface border border-border rounded-xl transition-all duration-300 hover:border-accent hover:-translate-y-1 overflow-hidden block ' +
+        'group relative bg-surface border border-border rounded-xl transition-[border-color,transform] duration-300 hover:border-accent hover:-translate-y-1 overflow-hidden block ' +
         (featured ? 'p-8' : 'p-6 flex flex-col gap-4')
       }
     >

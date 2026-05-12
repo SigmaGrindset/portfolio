@@ -9,9 +9,10 @@ export function Contact() {
 
   useGSAP(
     () => {
-      gsap.from('[data-contact] > *', {
-        y: 28,
-        opacity: 0,
+      gsap.set('[data-contact] > *', { autoAlpha: 0, y: 28 });
+      gsap.to('[data-contact] > *', {
+        y: 0,
+        autoAlpha: 1,
         stagger: 0.12,
         scrollTrigger: {
           trigger: root.current,
@@ -37,7 +38,7 @@ export function Contact() {
         </p>
         <a
           href="mailto:antoniobnoni@gmail.com"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:-translate-y-px transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm bg-accent text-white border border-accent hover:bg-accent-hover hover:-translate-y-px transition-[background-color,border-color,transform] duration-200"
         >
           antoniobnoni@gmail.com
         </a>

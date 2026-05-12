@@ -19,7 +19,7 @@ export function ProjectNav({
           <Link
             to="/projects/$slug"
             params={{ slug: prev.slug }}
-            className="group bg-surface border border-border rounded-xl p-6 hover:border-accent hover:-translate-y-1 transition-all"
+            className="group bg-surface border border-border rounded-xl p-6 hover:border-accent hover:-translate-y-1 transition-[border-color,transform] duration-200"
           >
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-fg-tertiary mb-3">
               <ArrowLeft size={14} />
@@ -37,7 +37,7 @@ export function ProjectNav({
           <Link
             to="/projects/$slug"
             params={{ slug: next.slug }}
-            className="group bg-surface border border-border rounded-xl p-6 hover:border-accent hover:-translate-y-1 transition-all md:text-right"
+            className="group bg-surface border border-border rounded-xl p-6 hover:border-accent hover:-translate-y-1 transition-[border-color,transform] duration-200 md:text-right"
           >
             <div className="flex md:justify-end items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-fg-tertiary mb-3">
               {t.project.next}
