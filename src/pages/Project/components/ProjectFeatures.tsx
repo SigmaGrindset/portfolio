@@ -7,26 +7,26 @@ export function ProjectFeatures({ features, num }: { features: Loc[]; num: strin
   const l = useL();
   const ref = useScrollReveal<HTMLUListElement>({
     selector: '[data-feature]',
-    y: 16,
+    y: 12,
     stagger: 0.05,
   });
 
   return (
-    <section className="relative z-10">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+    <section className="py-24 border-b border-rule">
+      <div className="max-w-[1320px] mx-auto px-6 md:px-10">
         <SectionHeader num={num} title={t.project.features} />
         <div className="grid grid-cols-12 gap-6">
-          <ul ref={ref} className="col-span-12 md:col-start-3 md:col-span-10">
+          <ul ref={ref} className="col-span-12 md:col-start-3 md:col-span-10 border-t border-fg">
             {features.map((f, i) => (
               <li
                 key={i}
                 data-feature
-                className="grid grid-cols-12 gap-4 py-3 border-b border-rule items-baseline"
+                className="grid grid-cols-12 gap-3 md:gap-6 items-baseline py-5 border-b border-rule"
               >
-                <span className="col-span-1 font-mono text-[0.7rem] uppercase tracking-[0.1em] text-accent">
+                <span className="col-span-2 md:col-span-1 text-[0.75rem] font-medium text-fg-tertiary tabular">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="col-span-11 font-serif text-lg md:text-xl leading-[1.4]">
+                <span className="col-span-10 md:col-span-11 text-[1.15rem] leading-[1.45]">
                   {l(f)}
                 </span>
               </li>

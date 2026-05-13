@@ -8,41 +8,45 @@ export function ProjectStack({ groups, num }: { groups: TechGroup[]; num: string
   const l = useL();
   const ref = useScrollReveal<HTMLDivElement>({
     selector: '[data-stack-group]',
-    y: 20,
-    stagger: 0.08,
+    y: 16,
+    stagger: 0.06,
   });
 
   return (
-    <section className="relative z-10">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+    <section className="py-24 border-b border-rule">
+      <div className="max-w-[1320px] mx-auto px-6 md:px-10">
         <SectionHeader num={num} title={t.project.stack} />
-        <div ref={ref} className="grid grid-cols-12 gap-6 md:gap-x-12 gap-y-10">
-          {groups.map((g, i) => (
-            <div
-              key={i}
-              data-stack-group
-              className="col-span-12 md:col-span-6 lg:col-span-4"
-            >
-              <h4 className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent pb-3 mb-3 border-b border-fg">
-                // {l(g.label)}
-              </h4>
-              <ul>
-                {g.items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="py-2 border-b border-rule flex items-baseline justify-between gap-4"
-                  >
-                    <span className="font-serif text-lg">{item.name}</span>
-                    {item.note && (
-                      <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-fg-secondary text-right">
-                        {l(item.note)}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="grid grid-cols-12 gap-6">
+          <div ref={ref} className="col-span-12 md:col-start-3 md:col-span-10 border-t border-fg">
+            {groups.map((g, i) => (
+              <div
+                key={i}
+                data-stack-group
+                className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 md:gap-8 py-6 border-b border-rule"
+              >
+                <h3 className="text-[0.75rem] uppercase tracking-[0.05em] text-fg-tertiary font-medium md:pt-1">
+                  {l(g.label)}
+                </h3>
+                <dl>
+                  {g.items.map((item) => (
+                    <div
+                      key={item.name}
+                      className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-1 md:gap-6 py-1.5 text-[1rem]"
+                    >
+                      <dt className="font-medium">{item.name}</dt>
+                      {item.note ? (
+                        <dd className="text-fg-tertiary text-[0.95rem]">
+                          {l(item.note)}
+                        </dd>
+                      ) : (
+                        <dd className="text-fg-faint">—</dd>
+                      )}
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

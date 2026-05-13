@@ -12,9 +12,9 @@ export function Nav() {
   useGSAP(
     () => {
       gsap.from(ref.current, {
-        y: -20,
+        y: -16,
         opacity: 0,
-        duration: 0.6,
+        duration: 0.5,
         ease: 'power3.out',
       });
     },
@@ -32,31 +32,34 @@ export function Nav() {
       ref={ref}
       className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-rule"
     >
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-5 flex justify-between items-baseline">
-        <a href="/" className="font-serif text-xl tracking-tight">
-          <em className="font-normal italic">A.</em>
-          <span className="font-semibold">Batarilović</span>
+      <div className="max-w-[1320px] mx-auto px-6 md:px-10 py-6 grid grid-cols-12 gap-6 items-baseline">
+        <a
+          href="/"
+          className="col-span-12 md:col-span-5 text-[0.9rem] font-medium tracking-tight"
+        >
+          Antonio Batarilović
+          <span className="text-fg-tertiary font-normal ml-2 hidden sm:inline">
+            — frontend developer, Zagreb
+          </span>
         </a>
-        <div className="hidden md:flex items-baseline gap-10">
-          <ul className="flex gap-10">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-fg hover:text-accent transition-colors relative group"
-                >
-                  / {l.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full" />
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center gap-2 pl-6 border-l border-rule">
+        <ul className="col-span-12 md:col-start-8 md:col-span-5 hidden md:flex gap-10 justify-end items-baseline">
+          {links.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="text-[0.875rem] font-medium text-fg relative group"
+              >
+                {l.label}
+                <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent origin-right scale-x-0 group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300" />
+              </a>
+            </li>
+          ))}
+          <li className="flex items-center gap-3 pl-4 border-l border-rule">
             <LanguageToggle />
             <ThemeToggle />
-          </div>
-        </div>
-        <div className="md:hidden flex items-center gap-2">
+          </li>
+        </ul>
+        <div className="md:hidden col-span-12 flex justify-end items-center gap-3">
           <LanguageToggle />
           <ThemeToggle />
         </div>

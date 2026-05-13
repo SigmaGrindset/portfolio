@@ -13,11 +13,12 @@ export function Projects() {
   useGSAP(
     () => {
       gsap.utils.toArray<HTMLElement>('[data-project-row]').forEach((row) => {
-        gsap.set(row, { autoAlpha: 0, y: 24 });
+        gsap.set(row, { autoAlpha: 0, y: 16 });
         gsap.to(row, {
           y: 0,
           autoAlpha: 1,
-          duration: 0.8,
+          duration: 0.6,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: row,
             start: 'top 90%',
@@ -30,11 +31,11 @@ export function Projects() {
   );
 
   return (
-    <section ref={root} id="projects" className="relative z-10">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+    <section ref={root} id="projects" className="py-24 border-b border-rule">
+      <div className="max-w-[1320px] mx-auto px-6 md:px-10">
         <SectionHeader num="03" title={t.projects.title} />
 
-        <div className="flex flex-col">
+        <div className="border-t border-fg">
           {projects.map((p, i) => (
             <ProjectRow key={p.slug} project={p} index={i + 1} />
           ))}
@@ -49,59 +50,64 @@ function ProjectRow({ project, index }: { project: ProjectDetail; index: number 
   const l = useL();
   const { title, shortDesc, techStack, cardTech, slug, category, featured, year } = project;
   const allTech = cardTech ?? techStack.flatMap((g) => g.items.map((i) => i.name));
-  const visibleTech = cardTech ? allTech : allTech.slice(0, 5);
+  const visibleTech = cardTech ? allTech : allTech.slice(0, 4);
 
   return (
     <Link
       to="/projects/$slug"
       params={{ slug }}
       data-project-row
-      className={
-        'group grid grid-cols-12 gap-6 py-10 border-b border-rule items-start transition-colors duration-300 ' +
-        (featured ? 'bg-bg-2 px-6 my-2' : 'hover:bg-bg-2 px-6 -mx-6')
-      }
+      className="group grid grid-cols-12 gap-3 md:gap-6 items-baseline py-10 border-b border-rule relative"
     >
-      {/* Index marker */}
-      <div className="col-span-2 md:col-span-1 font-serif font-light italic text-accent text-3xl md:text-4xl leading-none">
+      {/* Animated underline accent */}
+      <span
+        aria-hidden
+        className="absolute left-0 -bottom-px h-px bg-accent w-0 group-hover:w-full transition-[width] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
+      />
+
+      {/* Index */}
+      <div className="col-span-2 md:col-span-1 text-[0.75rem] font-medium text-fg-tertiary tabular">
         {String(index).padStart(2, '0')}
       </div>
 
-      {/* Meta (year + category) */}
-      <div className="col-span-10 md:col-span-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-secondary md:pt-2">
-        <div className="text-fg text-[0.8rem] mb-1">{year}</div>
-        {category}
+      {/* Year */}
+      <div className="col-span-2 md:col-span-1 text-[0.85rem] text-fg-tertiary tabular">
+        {year}
       </div>
 
       {/* Title + description */}
-      <div className="col-span-12 md:col-span-6">
+      <div className="col-span-12 md:col-span-6 md:order-none">
         {featured && (
-          <span className="inline-block font-mono text-[0.65rem] uppercase tracking-[0.2em] bg-accent text-bg px-2 py-0.5 mb-3">
-            {t.projects.featured}
-          </span>
+          <div className="text-[0.65rem] uppercase tracking-[0.08em] text-accent font-medium mb-2">
+            ★ {t.projects.featured} · {category}
+          </div>
         )}
         <h3
           className={
-            'font-serif font-normal tracking-tight leading-[1.1] mb-3 group-hover:text-accent transition-colors ' +
-            (featured ? 'text-4xl md:text-5xl' : 'text-3xl md:text-4xl')
+            'tracking-[-0.02em] leading-[1.1] mb-2 transition-colors group-hover:text-accent ' +
+            (featured ? 'text-[2rem] md:text-[2.25rem] font-medium' : 'text-[1.75rem] md:text-[1.85rem] font-normal')
           }
         >
           {title}
         </h3>
-        <p className="text-[0.95rem] leading-[1.55] text-fg-secondary max-w-[60ch]">
+        <p className="text-[0.95rem] leading-[1.55] text-fg-secondary max-w-[55ch]">
           {l(shortDesc)}
         </p>
       </div>
 
       {/* Tech */}
-      <div className="col-span-12 md:col-span-3 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-fg-secondary md:text-right md:pt-2">
+      <div className="col-span-10 md:col-span-3 text-[0.75rem] text-fg-tertiary md:text-right md:pt-1">
         {visibleTech.map((tt, i) => (
           <span key={tt} className="inline-block">
             {tt}
-            {i < visibleTech.length - 1 && (
-              <span className="text-accent italic px-1.5">·</span>
-            )}
+            {i < visibleTech.length - 1 && <span>, </span>}
           </span>
         ))}
+      </div>
+
+      {/* Arrow */}
+      <div className="col-span-2 md:col-span-1 text-[1.5rem] text-fg-tertiary md:text-right md:pt-1 group-hover:text-accent group-hover:translate-x-2 transition-all duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]">
+        →
       </div>
     </Link>
   );

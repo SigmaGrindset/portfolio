@@ -6,15 +6,15 @@ export function ProjectGallery({ images, num }: { images: string[]; num: string 
   const { t } = useTranslation();
   const ref = useScrollReveal<HTMLDivElement>({
     selector: '[data-gallery-item]',
-    y: 24,
-    stagger: 0.1,
+    y: 20,
+    stagger: 0.08,
   });
 
   if (!images.length) return null;
 
   return (
-    <section className="relative z-10">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+    <section className="py-24 border-b border-rule">
+      <div className="max-w-[1320px] mx-auto px-6 md:px-10">
         <SectionHeader num={num} title={t.project.gallery} />
         <div ref={ref} className="grid grid-cols-12 gap-6">
           {images.map((src, i) => (
@@ -22,7 +22,7 @@ export function ProjectGallery({ images, num }: { images: string[]; num: string 
               key={src}
               data-gallery-item
               className={
-                'group relative overflow-hidden border border-rule bg-bg-2 ' +
+                'group relative overflow-hidden bg-bg-2 border border-rule ' +
                 (i === 0
                   ? 'col-span-12 aspect-[21/9]'
                   : 'col-span-12 md:col-span-6 aspect-[16/10]')
@@ -33,7 +33,7 @@ export function ProjectGallery({ images, num }: { images: string[]; num: string 
                 alt={`Screenshot ${i + 1}`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
-              <figcaption className="absolute bottom-2 left-3 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-bg bg-fg/80 px-2 py-0.5">
+              <figcaption className="absolute bottom-3 left-3 text-[0.7rem] uppercase tracking-[0.1em] text-fg bg-bg/80 px-2 py-0.5 backdrop-blur-sm">
                 {String(i + 1).padStart(2, '0')}
               </figcaption>
             </figure>
