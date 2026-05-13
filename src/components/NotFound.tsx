@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/i18n/i18n';
 import { useDocumentTitle } from '@/lib/useDocumentTitle';
 
@@ -8,25 +7,38 @@ export function NotFound() {
   useDocumentTitle('404');
 
   return (
-    <section className="min-h-[70vh] flex items-center justify-center relative z-10 px-6 md:px-10">
-      <div className="text-center max-w-[640px]">
-        <div className="font-serif font-light italic text-accent text-[clamp(6rem,18vw,12rem)] leading-none mb-4">
-          {t.notFound.code}
+    <section className="min-h-[70vh] flex items-start justify-center px-6 md:px-10 pt-16 max-w-[1200px] mx-auto">
+      <div className="max-w-[640px] w-full">
+        <div className="text-[13px]">
+          <span className="text-green font-medium">➜  </span>
+          <span className="text-blue">~/portfolio</span>
+          <span className="text-fg ml-2">cd</span>
+          <span className="text-amber ml-1.5">./{window.location.pathname.slice(1) || 'unknown'}</span>
         </div>
-        <h1 className="font-serif font-normal text-[clamp(2rem,5vw,3.5rem)] leading-[1.05] tracking-tight mb-6">
-          <em>{t.notFound.title.split(' ')[0]}</em>{' '}
-          {t.notFound.title.split(' ').slice(1).join(' ')}
-        </h1>
-        <p className="text-fg-secondary text-lg mb-10 max-w-[40ch] mx-auto">
-          {t.notFound.text}
-        </p>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] border border-fg text-fg px-6 py-3 hover:bg-fg hover:text-bg transition-colors"
-        >
-          <ArrowLeft size={14} />
-          {t.notFound.backHome}
-        </Link>
+        <div className="ml-4 pl-4 border-l border-rule mt-3">
+          <div className="text-red text-[13px] mb-3">
+            <span className="text-fg-faint">bash: </span>
+            cd: ./{window.location.pathname.slice(1) || 'unknown'}: No such file or directory
+          </div>
+          <div className="text-fg-faint text-[11px] mb-6">
+            error code: <span className="text-amber">{t.notFound.code}</span>
+          </div>
+          <pre className="text-amber text-[10px] leading-[1.1] whitespace-pre mb-6 overflow-x-auto">
+{`    ██╗  ██╗ ██████╗ ██╗  ██╗
+    ██║  ██║██╔═████╗██║  ██║
+    ███████║██║██╔██║███████║
+    ╚════██║████╔╝██║╚════██║
+         ██║╚██████╔╝     ██║
+         ╚═╝ ╚═════╝      ╚═╝`}
+          </pre>
+          <p className="text-fg mb-6 max-w-[60ch]">{t.notFound.text}</p>
+          <Link
+            to="/"
+            className="inline-block text-blue border-b border-blue border-dashed hover:bg-green/20 transition-colors text-[14px]"
+          >
+            ← cd ../home
+          </Link>
+        </div>
       </div>
     </section>
   );

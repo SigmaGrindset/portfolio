@@ -1,15 +1,15 @@
 import { useRef } from 'react';
-import { ArrowLeft, ArrowUpRight, Github } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation, useL } from '@/i18n/i18n';
+import { Prompt, Output } from '@/components/ui/Prompt';
 import type { ProjectDetail } from '@/data/projects';
 
-const statusStyle: Record<ProjectDetail['status'], string> = {
-  live: 'text-accent border-accent',
-  dev: 'text-fg border-fg',
-  archived: 'text-fg-tertiary border-rule',
+const statusColor: Record<ProjectDetail['status'], string> = {
+  live: 'text-green',
+  dev: 'text-amber',
+  archived: 'text-fg-dim',
 };
 
 export function ProjectHero({ project }: { project: ProjectDetail }) {
@@ -19,32 +19,14 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
 
   useGSAP(
     () => {
-      const targets = [
-        '[data-ph="back"]',
-        '[data-ph="category"]',
-        '[data-ph="title"]',
-        '[data-ph="lede"]',
-        '[data-ph="meta"] > *',
-        '[data-ph="actions"] > *',
-      ];
-      gsap.set(targets, { autoAlpha: 0, y: 16 });
-      gsap.set('[data-ph="title"]', { y: 32 });
-
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.to('[data-ph="back"]', { y: 0, autoAlpha: 1, duration: 0.5 })
-        .to('[data-ph="category"]', { y: 0, autoAlpha: 1, duration: 0.5 }, '-=0.2')
-        .to('[data-ph="title"]', { y: 0, autoAlpha: 1, duration: 0.9 }, '-=0.3')
-        .to('[data-ph="lede"]', { y: 0, autoAlpha: 1, duration: 0.7 }, '-=0.5')
-        .to(
-          '[data-ph="meta"] > *',
-          { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08 },
-          '-=0.4',
-        )
-        .to(
-          '[data-ph="actions"] > *',
-          { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.08 },
-          '-=0.3',
-        );
+      gsap.set('[data-ph-reveal]', { autoAlpha: 0, y: 10 });
+      gsap.to('[data-ph-reveal]', {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.5,
+        stagger: 0.06,
+        ease: 'power3.out',
+      });
     },
     { scope: root },
   );
@@ -56,112 +38,101 @@ export function ProjectHero({ project }: { project: ProjectDetail }) {
   }[project.status];
 
   return (
-    <header ref={root} className="pt-10 pb-12 border-b border-rule relative z-10">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
-        <Link
-          to="/"
-          hash="projects"
-          data-ph="back"
-          className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-fg-secondary hover:text-accent transition-colors mb-12"
+    <header ref={root} className="px-6 md:px-10 max-w-[1200px] mx-auto pt-6">
+      <Link
+        to="/"
+        hash="projects"
+        data-ph-reveal
+        className="inline-block text-[12px] text-fg-dim hover:text-green transition-colors mb-6"
+      >
+        <span className="text-fg-faint">←</span> cd ../projects
+      </Link>
+
+      <Prompt cmd="cat" arg={`projects/${project.slug}/README.md`} />
+      <Output
+        file={`${project.slug}/README.md`}
+        meta={`year ${project.year} · ${project.category.toLowerCase()}`}
+      >
+        <h1
+          data-ph-reveal
+          className="text-green text-[1.6rem] md:text-[2rem] mt-3 mb-4 leading-tight"
         >
-          <ArrowLeft size={12} />
-          {t.project.back}
-        </Link>
+          <span className="text-fg-faint"># </span>
+          {project.title}
+        </h1>
 
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-2 md:border-r md:border-rule md:pr-6">
-            <div
-              data-ph="category"
-              className="font-mono text-xs uppercase tracking-[0.15em] text-accent"
-            >
-              {project.category}
-            </div>
-            <div className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-fg-tertiary mt-2">
-              {project.year}
-            </div>
-          </div>
+        <p
+          data-ph-reveal
+          className="text-fg text-[15px] max-w-[75ch] leading-[1.65] mb-6"
+        >
+          {l(project.shortDesc)}
+        </p>
 
-          <div className="col-span-12 md:col-span-10">
-            <h1
-              data-ph="title"
-              className="font-serif font-normal wonk text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.95] tracking-[-0.025em] mb-6"
-            >
-              <em className="italic font-light text-accent">
-                {project.title.split(' ')[0]}
-              </em>
-              {project.title.split(' ').length > 1 && (
-                <> {project.title.split(' ').slice(1).join(' ')}</>
-              )}
-            </h1>
-
-            <p
-              data-ph="lede"
-              className="font-serif text-xl md:text-2xl leading-[1.4] max-w-[44ch] mb-12 text-fg-secondary"
-            >
-              {l(project.shortDesc)}
-            </p>
-
-            <dl
-              data-ph="meta"
-              className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-rule max-w-[800px] mb-10"
-            >
-              <MetaBlock label={t.project.role} value={l(project.role)} />
-              <MetaBlock label={t.project.context} value={l(project.context)} />
-              <MetaBlock label={t.project.year} value={project.year} />
-              <MetaBlock
-                label={t.project.status}
-                value={
-                  <span
-                    className={
-                      'inline-flex items-center gap-1.5 px-2 py-0.5 border text-[0.7rem] font-mono uppercase tracking-[0.1em] ' +
-                      statusStyle[project.status]
-                    }
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                    {statusLabel}
-                  </span>
-                }
-              />
-            </dl>
-
-            <div data-ph="actions" className="flex flex-wrap gap-3">
-              {project.links.github && (
-                <a
-                  href={project.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] border border-fg text-fg px-5 py-2.5 hover:bg-fg hover:text-bg transition-colors"
-                >
-                  <Github size={14} />
-                  {t.project.github}
-                </a>
-              )}
-              {project.links.live && (
-                <a
-                  href={project.links.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] bg-accent text-bg border border-accent px-5 py-2.5 hover:bg-accent-hover hover:border-accent-hover transition-colors"
-                >
-                  <ArrowUpRight size={14} />
-                  {t.project.live}
-                </a>
-              )}
-            </div>
-          </div>
+        <h2 data-ph-reveal className="text-amber text-[1.1rem] mt-6 mb-2">
+          <span className="text-fg-faint">## </span>Meta
+        </h2>
+        <div data-ph-reveal className="border border-rule bg-bg-2 mb-6">
+          <MetaRow k="role" v={l(project.role)} />
+          <MetaRow k="context" v={l(project.context)} />
+          <MetaRow k="year" v={project.year} />
+          <MetaRow
+            k="status"
+            v={
+              <span className={statusColor[project.status]}>
+                {project.status !== 'archived' && '● '}
+                {statusLabel}
+              </span>
+            }
+            last
+          />
         </div>
-      </div>
+
+        <div data-ph-reveal className="flex flex-wrap gap-3">
+          {project.links.github && (
+            <a
+              href={project.links.github}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-[12px] uppercase tracking-wider border border-rule text-fg px-4 py-2 hover:border-green hover:text-green transition-colors"
+            >
+              $ git clone
+            </a>
+          )}
+          {project.links.live && (
+            <a
+              href={project.links.live}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-[12px] uppercase tracking-wider bg-green text-bg border border-green px-4 py-2 hover:bg-accent-hover hover:border-accent-hover transition-colors"
+            >
+              $ open ./live
+            </a>
+          )}
+        </div>
+      </Output>
     </header>
   );
 }
 
-function MetaBlock({ label, value }: { label: string; value: React.ReactNode }) {
+function MetaRow({
+  k,
+  v,
+  last,
+}: {
+  k: string;
+  v: React.ReactNode;
+  last?: boolean;
+}) {
   return (
-    <div>
-      <dt className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-fg-tertiary mb-1">
-        {label}
-      </dt>
-      <dd className="text-sm font-medium">{value}</dd>
+    <div
+      className={
+        'grid grid-cols-[110px_1fr] px-4 py-2 text-[13px] ' +
+        (last ? '' : 'border-b border-rule')
+      }
+    >
+      <span className="text-fg-dim">{k}</span>
+      <span className="text-fg">{v}</span>
     </div>
   );
 }
+

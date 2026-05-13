@@ -1,54 +1,26 @@
-import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { Prompt } from './Prompt';
 
-export function SectionHeader({ num, title }: { num: string; title: string }) {
-  const root = useRef<HTMLDivElement | null>(null);
+/**
+ * Maps an English title to a terminal-flavored command + argument.
+ * Falls back to a generic `cat {slug}.md` form.
+ */
+function commandFor(title: string): { cmd: string; arg?: string } {
+  const t = title.toLowerCase();
+  if (t.includes('overview') || t.includes('pregled')) return { cmd: 'cat', arg: 'overview.md' };
+  if (t.includes('features') || t.includes('funkcionalnosti'))
+    return { cmd: 'ls', arg: '-1 features/' };
+  if (t.includes('stack') || t.includes('tehnologije'))
+    return { cmd: 'cat', arg: 'package.json' };
+  if (t.includes('gallery') || t.includes('galerija'))
+    return { cmd: 'ls', arg: '-1 screenshots/' };
+  if (t.includes('about') || t.includes('o meni')) return { cmd: 'cat', arg: 'about.md' };
+  if (t.includes('projects') || t.includes('projekti'))
+    return { cmd: 'ls', arg: '-la projects/' };
+  if (t.includes('contact') || t.includes('kontakt')) return { cmd: './contact.sh' };
+  return { cmd: 'cat', arg: `${title.toLowerCase()}.md` };
+}
 
-  useGSAP(
-    () => {
-      gsap.set(['[data-sh="num"]', '[data-sh="title"]'], { autoAlpha: 0, y: 20 });
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-        defaults: { ease: 'power3.out' },
-      });
-      tl.to('[data-sh="num"]', { y: 0, autoAlpha: 1, duration: 0.6 }).to(
-        '[data-sh="title"]',
-        { y: 0, autoAlpha: 1, duration: 0.7 },
-        '-=0.4',
-      );
-    },
-    { scope: root },
-  );
-
-  // Split title to allow italic accent on first word
-  const parts = title.split(' ');
-  const firstWord = parts[0];
-  const rest = parts.slice(1).join(' ');
-
-  return (
-    <div
-      ref={root}
-      className="pt-20 pb-8 grid grid-cols-12 gap-6 items-end border-b-2 border-fg mb-16"
-    >
-      <div
-        data-sh="num"
-        className="col-span-2 font-serif font-light italic text-accent text-5xl md:text-6xl leading-none"
-      >
-        {num.replace('.', '')}
-      </div>
-      <h2
-        data-sh="title"
-        className="col-span-10 font-serif font-normal text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] tracking-tight"
-      >
-        <em className="italic">{firstWord}</em>
-        {rest && <span> {rest}</span>}
-        {' —'}
-      </h2>
-    </div>
-  );
+export function SectionHeader({ title }: { num?: string; title: string }) {
+  const { cmd, arg } = commandFor(title);
+  return <Prompt cmd={cmd} arg={arg} />;
 }

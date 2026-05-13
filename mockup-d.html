@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction D — Glassmorphism / Modern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0918;
+    --bg-2: rgba(255, 255, 255, 0.04);
+    --bg-glass: rgba(255, 255, 255, 0.05);
+    --fg: #f0f0fa;
+    --fg-2: #b8b8d0;
+    --fg-3: #7a7a95;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-soft: rgba(255, 255, 255, 0.06);
+    --indigo: #818cf8;
+    --purple: #c084fc;
+    --pink: #f0abfc;
+    --cyan: #67e8f9;
+    --emerald: #6ee7b7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+  ::selection { background: rgba(192, 132, 252, 0.4); color: var(--fg); }
+
+  /* AMBIENT GRADIENT BLOBS */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--indigo), transparent 70%);
+    top: -10%; left: -10%;
+    animation: float1 25s ease-in-out infinite;
+  }
+  body::after {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, var(--purple), transparent 70%);
+    bottom: -15%; right: -10%;
+    animation: float2 30s ease-in-out infinite;
+  }
+  @keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(100px, 80px) scale(1.1); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-80px, -100px) scale(1.15); }
+  }
+
+  /* Extra blob */
+  .blob-cyan {
+    position: fixed;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--cyan), transparent 70%);
+    filter: blur(100px);
+    opacity: 0.25;
+    top: 40%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: float3 35s ease-in-out infinite;
+  }
+  @keyframes float3 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-30%, -60%) scale(1.2); }
+  }
+
+  /* MAIN */
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 2rem; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 1rem;
+    z-index: 50;
+    margin: 1rem auto 0;
+    max-width: 980px;
+    padding: 0.5rem;
+    background: rgba(10, 9, 24, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  nav .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+  nav .brand {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--indigo), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  nav ul {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+  }
+  nav a {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    color: var(--fg-2);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 999px;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  nav a:hover {
+    color: var(--fg);
+    background: var(--bg-glass);
+  }
+  nav .toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg-2);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  nav .toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.08);
+  }
+
+  /* HERO */
+  .hero { padding: 8rem 0 6rem; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem 0.4rem 0.5rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: var(--fg-2);
+    font-weight: 500;
+    margin-bottom: 2rem;
+  }
+  .pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 12px var(--emerald);
+  }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 1.02;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    margin-bottom: 2rem;
+    max-width: 16ch;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--indigo) 20%, var(--purple) 60%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero .lede {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--fg-2);
+    max-width: 52ch;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+  .hero .actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+  }
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--indigo);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(129, 140, 248, 0.2);
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--indigo), var(--purple));
+    border: 1px solid transparent;
+    color: white;
+    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.3);
+  }
+  .btn.primary:hover {
+    box-shadow: 0 12px 32px rgba(129, 140, 248, 0.5);
+  }
+
+  /* SECTION HEADER */
+  section { padding: 6rem 0; }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .section-head .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--indigo);
+  }
+  .section-head h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .section-head h2 .grad {
+    background: linear-gradient(135deg, var(--indigo), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .glass-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--fg-2);
+    margin-bottom: 1rem;
+    max-width: 60ch;
+  }
+  .about-text strong { color: var(--fg); font-weight: 600; }
+  .about-text a {
+    color: var(--indigo);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .about-text a:hover { border-bottom-color: var(--indigo); }
+
+  .info-card .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-3);
+    margin-bottom: 1.5rem;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.9rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row dt { color: var(--fg-3); }
+  .info-row dd { font-weight: 500; }
+  .info-row a { color: var(--indigo); text-decoration: none; }
+  .info-row a:hover { color: var(--purple); }
+
+  .skill-cluster { margin-top: 2rem; }
+  .skill-cluster h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-3);
+    margin-bottom: 0.75rem;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chip {
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    color: var(--fg-2);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .chip:hover {
+    background: rgba(129, 140, 248, 0.15);
+    color: var(--indigo);
+    border-color: var(--indigo);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--fg);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    border-radius: 24px;
+  }
+  .project-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    border-color: rgba(129, 140, 248, 0.4);
+    box-shadow: 0 16px 48px rgba(129, 140, 248, 0.15);
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-card.featured {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.08), rgba(192, 132, 252, 0.04));
+  }
+  .project-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .project-card .category {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--indigo);
+  }
+  .project-card .status {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(110, 231, 183, 0.15);
+    color: var(--emerald);
+    border: 1px solid rgba(110, 231, 183, 0.3);
+  }
+  .project-card .status.dev { background: rgba(252, 211, 77, 0.15); color: #fcd34d; border-color: rgba(252, 211, 77, 0.3); }
+  .project-card .status.archived { background: rgba(255, 255, 255, 0.05); color: var(--fg-3); }
+  .project-card h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+  .project-card .featured h3 { font-size: 2.5rem; }
+  .project-card p {
+    color: var(--fg-2);
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+    max-width: 60ch;
+  }
+  .project-card .tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .project-card .arrow {
+    position: absolute;
+    top: 2rem; right: 2rem;
+    width: 36px; height: 36px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .project-card:hover .arrow {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    transform: rotate(-45deg);
+    color: white;
+  }
+
+  /* CONTACT */
+  .contact { text-align: center; padding-top: 4rem; }
+  .contact h2 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .contact h2 .grad {
+    background: linear-gradient(135deg, var(--indigo), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .contact p {
+    color: var(--fg-2);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+  .contact .mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--indigo), var(--purple));
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 32px rgba(129, 140, 248, 0.4);
+  }
+  .contact .mail:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(129, 140, 248, 0.6);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 0 2rem;
+    border-top: 1px solid var(--border-soft);
+    font-size: 0.85rem;
+    color: var(--fg-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer a {
+    color: var(--fg-3);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    transition: color 0.2s;
+  }
+  footer a:hover { color: var(--fg); }
+
+  @media (max-width: 768px) {
+    .about-grid, .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: auto; }
+    nav { margin: 0.5rem; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob-cyan"></div>
+
+<nav>
+  <div class="inner">
+    <div class="brand">antonio.dev</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div style="display: flex; gap: 0.4rem;">
+      <button class="toggle">HR</button>
+      <button class="toggle">☾</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="pill">Available for opportunities</div>
+    <h1>
+      Gradim stvari za <span class="grad">web</span> — od dizajna do deploya.
+    </h1>
+    <p class="lede">
+      Student treće godine FER-a u Zagrebu, trenutno na Sofascore Frontend Academy. Iako najčešće radim na frontendu, jednako me zanima backend i dizajn sučelja.
+    </p>
+    <div class="actions">
+      <a href="#work" class="btn primary">See work →</a>
+      <a href="mailto:antoniobnoni@gmail.com" class="btn">Get in touch</a>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>About <span class="grad">me.</span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="glass-card about-text">
+        <p>
+          Trenutno sam na trećoj godini <strong>Fakulteta elektrotehnike i računarstva</strong> u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz <a href="https://shiftnudge.com/">Shift Nudge</a> tečaj.
+        </p>
+        <p>
+          Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya.
+        </p>
+        <div class="skill-cluster">
+          <h3>Frontend</h3>
+          <div class="chips">
+            <span class="chip">React</span><span class="chip">Next.js</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">Tailwind</span><span class="chip">TanStack</span><span class="chip">PandaCSS</span>
+          </div>
+        </div>
+        <div class="skill-cluster">
+          <h3>Backend & Data</h3>
+          <div class="chips">
+            <span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">Python</span>
+          </div>
+        </div>
+        <div class="skill-cluster">
+          <h3>Design & Tools</h3>
+          <div class="chips">
+            <span class="chip">Figma</span><span class="chip">UI/UX</span><span class="chip">Git</span><span class="chip">Blender</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="glass-card info-card">
+        <div class="label">// Info</div>
+        <dl>
+          <div class="info-row"><dt>Location</dt><dd>Zagreb, HR</dd></div>
+          <div class="info-row"><dt>Status</dt><dd style="color: var(--emerald);">● Open</dd></div>
+          <div class="info-row"><dt>Education</dt><dd>FER · 3rd yr</dd></div>
+          <div class="info-row"><dt>Currently</dt><dd>Sofascore Academy</dd></div>
+          <div class="info-row"><dt>English</dt><dd>B2</dd></div>
+          <div class="info-row"><dt>CV</dt><dd><a href="/cv.pdf">Download ↓</a></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>Selected <span class="grad">work.</span></h2>
+    </div>
+    <div class="projects-grid">
+      <a class="project-card featured" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">★ Featured · Sofascore Academy</span>
+          <span class="status">● Live</span>
+        </div>
+        <h3>Sofascore Canteen</h3>
+        <p>One-stop shop za upravljanje uredskim ručkovima. Zaposlenici biraju obroke, catering planira menije. Razvijeno tijekom Sofascore Frontend Academy.</p>
+        <div class="tech">
+          <span class="chip">React</span><span class="chip">PandaCSS</span><span class="chip">TanStack Router</span><span class="chip">SWR</span><span class="chip">Zustand</span>
+        </div>
+      </a>
+      <a class="project-card featured" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">★ Featured · Data Viz</span>
+          <span class="status">● Live</span>
+        </div>
+        <h3>USA Elections</h3>
+        <p>Vizualizacija predsjedničkih izbora u SAD-u od 1789. do 2024. — interaktivna karta država, usporedba dvaju izbora, swing states.</p>
+        <div class="tech">
+          <span class="chip">Python</span><span class="chip">PostgreSQL</span><span class="chip">Express</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">D3</span>
+        </div>
+      </a>
+      <a class="project-card" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">Web App</span>
+          <span class="status archived">Archived</span>
+        </div>
+        <h3>GearShare</h3>
+        <p>Platforma za iznajmljivanje sezonske sportske opreme. Timski FER projekt.</p>
+        <div class="tech">
+          <span class="chip">React</span><span class="chip">Spring Boot</span><span class="chip">PostgreSQL</span><span class="chip">Stripe</span>
+        </div>
+      </a>
+      <a class="project-card" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">Web App</span>
+          <span class="status">● Live</span>
+        </div>
+        <h3>LearnFlow</h3>
+        <p>Planer učenja za studente uz grafove aktivnosti. Backend rad u timu.</p>
+        <div class="tech">
+          <span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PostgreSQL</span><span class="chip">Docker</span>
+        </div>
+      </a>
+      <a class="project-card" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">Web App</span>
+          <span class="status dev">● Dev</span>
+        </div>
+        <h3>SpotiLens</h3>
+        <p>Full-stack aplikacija na Spotify API — listening stats i extended history upload.</p>
+        <div class="tech">
+          <span class="chip">React</span><span class="chip">Node.js</span><span class="chip">MongoDB</span><span class="chip">Spotify API</span>
+        </div>
+      </a>
+      <a class="project-card" href="#">
+        <div class="arrow">↗</div>
+        <div class="meta">
+          <span class="category">Scraping</span>
+          <span class="status archived">Archived</span>
+        </div>
+        <h3>NBA Scraper</h3>
+        <p>Automatizirani scraper za podatke o NBA utakmicama.</p>
+        <div class="tech">
+          <span class="chip">Python</span><span class="chip">Selenium</span><span class="chip">BS4</span><span class="chip">Node.js</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="section-head" style="justify-content: center;">
+      <span class="num">03</span>
+    </div>
+    <h2>
+      Let's talk — <span class="grad">say hi.</span>
+    </h2>
+    <p>I'm currently open to opportunities. Drop me a message about a project, internship, or just a chat about frontend and design.</p>
+    <a href="mailto:antoniobnoni@gmail.com" class="mail">
+      antoniobnoni@gmail.com →
+    </a>
+  </section>
+
+  <footer>
+    <span>© 2026 Antonio Batarilović · Built with care</span>
+    <span>
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Email</a>
+    </span>
+  </footer>
+</div>
+
+</body>
+</html>

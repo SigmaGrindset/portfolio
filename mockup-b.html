@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction B — Terminal / Code-themed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-2: #161b22;
+    --bg-3: #1c2128;
+    --fg: #c9d1d9;
+    --fg-dim: #8b949e;
+    --fg-faint: #484f58;
+    --green: #3fb950;
+    --amber: #d29922;
+    --blue: #58a6ff;
+    --red: #f85149;
+    --purple: #bc8cff;
+    --rule: #21262d;
+    --selection: rgba(63, 185, 80, 0.3);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  ::selection { background: var(--selection); color: var(--fg); }
+
+  /* Subtle CRT scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.012) 2px,
+        rgba(255, 255, 255, 0.012) 3px
+      );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* TOP STATUS BAR */
+  .statusbar {
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--fg-dim);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .statusbar .left { display: flex; gap: 1rem; }
+  .statusbar .badge {
+    background: var(--bg-3);
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+  }
+  .statusbar .green-dot { color: var(--green); }
+  .statusbar .right { display: flex; gap: 1.5rem; }
+  .statusbar a { color: var(--fg-dim); text-decoration: none; }
+  .statusbar a:hover { color: var(--green); }
+
+  /* TABS */
+  .tabs {
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 0.6rem 1rem;
+    color: var(--fg-dim);
+    text-decoration: none;
+    border-right: 1px solid var(--rule);
+    background: var(--bg-2);
+    font-size: 12px;
+    white-space: nowrap;
+    border-top: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab:hover {
+    color: var(--fg);
+    background: var(--bg-3);
+  }
+  .tab.active {
+    background: var(--bg);
+    color: var(--green);
+    border-top-color: var(--green);
+  }
+  .tab .modifier { color: var(--fg-faint); margin-right: 0.5rem; }
+  .tab .filename { color: var(--blue); }
+  .tab .ext { color: var(--fg-dim); }
+
+  /* MAIN */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* PROMPT */
+  .prompt {
+    color: var(--green);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .prompt::before {
+    content: '➜  ';
+    color: var(--green);
+  }
+  .prompt .path {
+    color: var(--blue);
+    margin-right: 0.5rem;
+  }
+  .prompt .branch {
+    color: var(--purple);
+    margin-right: 0.5rem;
+  }
+  .prompt .branch::before { content: 'git:('; color: var(--fg-faint); }
+  .prompt .branch::after { content: ')'; color: var(--fg-faint); }
+  .prompt .cmd { color: var(--fg); }
+  .prompt .arg { color: var(--amber); }
+
+  /* HERO ASCII */
+  .hero {
+    padding: 3rem 0 2rem;
+  }
+  .ascii-art {
+    color: var(--green);
+    font-size: 10px;
+    line-height: 1.1;
+    white-space: pre;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+  .ascii-art .accent { color: var(--amber); }
+  .welcome {
+    color: var(--fg-dim);
+    margin-bottom: 0.5rem;
+  }
+  .welcome .key { color: var(--blue); }
+  .welcome .val { color: var(--amber); }
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    background: var(--green);
+    vertical-align: text-bottom;
+    animation: blink 1.1s steps(2, jump-none) infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* OUTPUT — about */
+  .output {
+    margin: 1rem 0 0 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule);
+  }
+  .file-header {
+    color: var(--fg-faint);
+    font-size: 11px;
+    margin-bottom: 1rem;
+  }
+  .file-header .dashes { color: var(--fg-faint); }
+  .file-header .name { color: var(--blue); }
+  .file-header .meta { color: var(--fg-dim); margin-left: 1rem; }
+
+  .md-h1 {
+    color: var(--green);
+    font-size: 1.4rem;
+    margin: 1.5rem 0 0.8rem;
+  }
+  .md-h1::before { content: '# '; color: var(--fg-faint); }
+
+  .md-h2 {
+    color: var(--amber);
+    font-size: 1.15rem;
+    margin: 1.2rem 0 0.6rem;
+  }
+  .md-h2::before { content: '## '; color: var(--fg-faint); }
+
+  .md-p {
+    color: var(--fg);
+    margin-bottom: 0.8rem;
+    max-width: 75ch;
+  }
+  .md-p strong {
+    color: var(--amber);
+    font-weight: 500;
+  }
+  .md-link {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--blue);
+  }
+  .md-link:hover { background: var(--selection); }
+
+  .comment { color: var(--fg-faint); font-style: italic; }
+  .string { color: var(--green); }
+  .keyword { color: var(--purple); }
+  .num { color: var(--amber); }
+
+  /* INFO TABLE */
+  .info {
+    margin: 1.5rem 0;
+    border: 1px solid var(--rule);
+    background: var(--bg-2);
+  }
+  .info-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .k { color: var(--fg-dim); }
+  .info-row .v { color: var(--fg); }
+  .info-row .v.green { color: var(--green); }
+
+  /* PROJECT LIST */
+  .ls-output {
+    margin: 1rem 0;
+    font-size: 13px;
+  }
+  .ls-header {
+    color: var(--fg-faint);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 100px 80px 80px 1fr 120px;
+    gap: 1rem;
+  }
+  .ls-row {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 100px 80px 80px 1fr 120px;
+    gap: 1rem;
+    align-items: center;
+    color: var(--fg);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .ls-row:hover {
+    background: var(--bg-2);
+  }
+  .ls-row:hover .name { color: var(--green); }
+  .ls-row .perms { color: var(--fg-dim); }
+  .ls-row .perms .d { color: var(--blue); }
+  .ls-row .perms .x { color: var(--green); }
+  .ls-row .size { color: var(--amber); text-align: right; }
+  .ls-row .year { color: var(--fg-dim); }
+  .ls-row .name {
+    color: var(--blue);
+    transition: color 0.15s;
+  }
+  .ls-row.featured .name { font-weight: 500; }
+  .ls-row .name .star {
+    color: var(--amber);
+    margin-left: 0.5rem;
+  }
+  .ls-row .desc {
+    color: var(--fg-dim);
+    font-size: 11px;
+    margin-top: 0.2rem;
+  }
+  .ls-row .status {
+    font-size: 10px;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    justify-self: end;
+  }
+  .ls-row .status.live { background: rgba(63, 185, 80, 0.15); color: var(--green); }
+  .ls-row .status.dev { background: rgba(210, 153, 34, 0.15); color: var(--amber); }
+  .ls-row .status.archived { background: rgba(110, 118, 129, 0.15); color: var(--fg-dim); }
+
+  /* TECH PILLS */
+  .tech-row { margin-top: 0.3rem; }
+  .tech-pill {
+    display: inline-block;
+    color: var(--purple);
+    font-size: 11px;
+    margin-right: 0.2rem;
+  }
+  .tech-pill:not(:last-child)::after { content: ' ·'; color: var(--fg-faint); margin-left: 0.2rem; }
+
+  /* SKILLS BLOCK */
+  .skills-block {
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .skills-block .label {
+    color: var(--amber);
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+  }
+  .skills-block .label::before { content: '['; color: var(--fg-faint); }
+  .skills-block .label::after { content: ']'; color: var(--fg-faint); }
+  .skills-block .items { color: var(--fg); font-size: 13px; }
+  .skills-block .items span:not(:last-child)::after { content: ', '; color: var(--fg-faint); }
+
+  /* CONTACT */
+  .contact-block {
+    margin: 2rem 0;
+  }
+  .contact-block .big-prompt {
+    color: var(--green);
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+  .contact-block .email-line a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--blue);
+  }
+  .contact-block .email-line a:hover {
+    background: var(--selection);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 1rem 0;
+    margin-top: 4rem;
+    color: var(--fg-faint);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+  }
+  footer a { color: var(--fg-dim); text-decoration: none; }
+  footer a:hover { color: var(--green); }
+  footer .links span { margin-left: 1.5rem; }
+
+  @media (max-width: 768px) {
+    .ls-header, .ls-row {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+    .ls-row .perms, .ls-row .size, .ls-row .year { display: none; }
+    .ascii-art { font-size: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TMUX-STYLE STATUS BAR -->
+<div class="statusbar">
+  <div class="left">
+    <span class="badge"><span class="green-dot">●</span> session</span>
+    <span>~/portfolio/antonio</span>
+    <span style="color: var(--purple);">main</span>
+  </div>
+  <div class="right">
+    <span>node 22.4.0</span>
+    <span>HR · EN</span>
+    <a href="#">☀ light</a>
+  </div>
+</div>
+
+<!-- VIM-STYLE TABS -->
+<div class="tabs">
+  <a href="#about" class="tab active"><span class="modifier">[1]</span><span class="filename">about</span><span class="ext">.md</span></a>
+  <a href="#projects" class="tab"><span class="modifier">[2]</span><span class="filename">projects</span><span class="ext">/</span></a>
+  <a href="#contact" class="tab"><span class="modifier">[3]</span><span class="filename">contact</span><span class="ext">.sh</span></a>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <pre class="ascii-art">
+   █████╗ ███╗   ██╗████████╗ ██████╗ ███╗   ██╗██╗ ██████╗
+  ██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗████╗  ██║██║██╔═══██╗
+  ███████║██╔██╗ ██║   ██║   ██║   ██║██╔██╗ ██║██║██║   ██║
+  ██╔══██║██║╚██╗██║   ██║   ██║   ██║██║╚██╗██║██║██║   ██║
+  ██║  ██║██║ ╚████║   ██║   ╚██████╔╝██║ ╚████║██║╚██████╔╝
+  ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝ ╚═════╝
+  <span class="accent">██████╗  █████╗ ████████╗ █████╗ ██████╗ ██╗██╗      ██████╗ ██╗   ██╗██╗ ██████╗</span>
+  <span class="accent">██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██║██║     ██╔═══██╗██║   ██║██║██╔════╝</span>
+  <span class="accent">██████╔╝███████║   ██║   ███████║██████╔╝██║██║     ██║   ██║██║   ██║██║██║     </span>
+  <span class="accent">██╔══██╗██╔══██║   ██║   ██╔══██║██╔══██╗██║██║     ██║   ██║╚██╗ ██╔╝██║██║     </span>
+  <span class="accent">██████╔╝██║  ██║   ██║   ██║  ██║██║  ██║██║███████╗╚██████╔╝ ╚████╔╝ ██║╚██████╗</span>
+  <span class="accent">╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝ ╚═════╝</span>
+    </pre>
+
+    <div class="welcome"><span class="key">role:</span>  <span class="val">"frontend developer"</span></div>
+    <div class="welcome"><span class="key">loc:</span>   <span class="val">"Zagreb, HR"</span></div>
+    <div class="welcome"><span class="key">study:</span> <span class="val">"FER · 3rd year"</span></div>
+    <div class="welcome"><span class="key">now:</span>   <span class="val">"Sofascore Frontend Academy"</span></div>
+    <div class="welcome"><span class="key">status:</span> <span class="val" style="color: var(--green);">"open to opportunities"</span></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="prompt">
+      <span class="path">~/portfolio</span>
+      <span class="branch">main</span>
+      <span class="cmd">cat</span> <span class="arg">about.md</span>
+    </div>
+    <div class="output">
+      <div class="file-header">
+        <span class="dashes">────</span> <span class="name">about.md</span> <span class="meta">· last modified 2026-05-13 · 1.2k</span>
+      </div>
+
+      <h1 class="md-h1">About me</h1>
+
+      <p class="md-p">
+        Trenutno sam na trećoj godini <strong>Fakulteta elektrotehnike i računarstva</strong> u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz <a class="md-link" href="https://shiftnudge.com/">Shift Nudge</a> tečaj.
+      </p>
+      <p class="md-p">
+        Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya. Većinu projekata pokrećem iz vlastite radoznalosti.
+      </p>
+
+      <h2 class="md-h2">Info</h2>
+      <div class="info">
+        <div class="info-row"><span class="k">location</span><span class="v">Zagreb, HR</span></div>
+        <div class="info-row"><span class="k">status</span><span class="v green">// open to opportunities</span></div>
+        <div class="info-row"><span class="k">education</span><span class="v">FER · 3rd year</span></div>
+        <div class="info-row"><span class="k">currently</span><span class="v">Sofascore Academy</span></div>
+        <div class="info-row"><span class="k">english</span><span class="v">B2</span></div>
+        <div class="info-row"><span class="k">cv</span><span class="v"><a class="md-link" href="/cv.pdf" download>./cv.pdf</a></span></div>
+      </div>
+    </div>
+
+    <div class="prompt">
+      <span class="path">~/portfolio</span>
+      <span class="branch">main</span>
+      <span class="cmd">ls</span> <span class="arg">-1 skills/</span>
+    </div>
+    <div class="output">
+      <div class="skills-block">
+        <div class="label">frontend</div>
+        <div class="items"><span>React</span><span>Next.js</span><span>TypeScript</span><span>JavaScript</span><span>HTML5</span><span>CSS3</span><span>TanStack Router</span><span>PandaCSS</span><span>Tailwind</span></div>
+      </div>
+      <div class="skills-block">
+        <div class="label">backend & data</div>
+        <div class="items"><span>Node.js</span><span>Express</span><span>PostgreSQL</span><span>MongoDB</span><span>Python</span><span>BeautifulSoup</span></div>
+      </div>
+      <div class="skills-block">
+        <div class="label">design & tools</div>
+        <div class="items"><span>Figma</span><span>UI/UX</span><span>Git</span><span>Blender</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="prompt">
+      <span class="path">~/portfolio</span>
+      <span class="branch">main</span>
+      <span class="cmd">ls</span> <span class="arg">-la projects/</span>
+    </div>
+    <div class="output">
+      <div class="file-header">
+        <span>total 6</span>
+      </div>
+      <div class="ls-output">
+        <div class="ls-header">
+          <span>permissions</span>
+          <span style="text-align:right;">size</span>
+          <span>year</span>
+          <span>name</span>
+          <span style="text-align:right;">status</span>
+        </div>
+
+        <a href="#" class="ls-row featured">
+          <span class="perms"><span class="d">d</span>rwxr-xr-x</span>
+          <span class="size">3.2k</span>
+          <span class="year">2026</span>
+          <span>
+            <span class="name">sofascore-canteen<span class="star">★</span></span>
+            <div class="desc">Web app for organizing weekly office meals. Built during Sofascore Frontend Academy.</div>
+            <div class="tech-row">
+              <span class="tech-pill">react</span>
+              <span class="tech-pill">panda-css</span>
+              <span class="tech-pill">tanstack-router</span>
+              <span class="tech-pill">swr</span>
+              <span class="tech-pill">zustand</span>
+            </div>
+          </span>
+          <span class="status live">● live</span>
+        </a>
+
+        <a href="#" class="ls-row featured">
+          <span class="perms"><span class="d">d</span>rwxr-xr-x</span>
+          <span class="size">5.8k</span>
+          <span class="year">2026</span>
+          <span>
+            <span class="name">usa-elections<span class="star">★</span></span>
+            <div class="desc">Vizualizacija svih predsjedničkih izbora u SAD-u od 1789 do 2024.</div>
+            <div class="tech-row">
+              <span class="tech-pill">python</span>
+              <span class="tech-pill">bs4</span>
+              <span class="tech-pill">postgres</span>
+              <span class="tech-pill">express</span>
+              <span class="tech-pill">react</span>
+              <span class="tech-pill">d3</span>
+            </div>
+          </span>
+          <span class="status live">● live</span>
+        </a>
+
+        <a href="#" class="ls-row">
+          <span class="perms"><span class="d">d</span>rwxr-xr-x</span>
+          <span class="size">2.1k</span>
+          <span class="year">2025</span>
+          <span>
+            <span class="name">gearshare</span>
+            <div class="desc">Platforma za iznajmljivanje sezonske sportske opreme. Team project (FER).</div>
+            <div class="tech-row">
+              <span class="tech-pill">react</span>
+              <span class="tech-pill">spring-boot</span>
+              <span class="tech-pill">postgres</span>
+              <span class="tech-pill">stripe</span>
+            </div>
+          </span>
+          <span class="status archived">archived</span>
+        </a>
+
+        <a href="#" class="ls-row">
+          <span class="perms"><span class="d">d</span>rwxr-xr-x</span>
+          <span class="size">1.4k</span>
+          <span class="year">2026</span>
+          <span>
+            <span class="name">learnflow</span>
+            <div class="desc">Planer učenja za studente. Backend rad (timski projekt).</div>
+            <div class="tech-row">
+              <span class="tech-pill">node</span>
+              <span class="tech-pill">express</span>
+              <span class="tech-pill">postgres</span>
+              <span class="tech-pill">docker</span>
+            </div>
+          </span>
+          <span class="status live">● live</span>
+        </a>
+
+        <a href="#" class="ls-row">
+          <span class="perms"><span class="d">d</span>rwxr-xr-x</span>
+          <span class="size">1.8k</span>
+          <span class="year">2024</span>
+          <span>
+            <span class="name">spotilens</span>
+            <div class="desc">Full-stack app za Spotify listening stats. Restricted to dev mode.</div>
+            <div class="tech-row">
+              <span class="tech-pill">react</span>
+              <span class="tech-pill">node</span>
+              <span class="tech-pill">mongodb</span>
+            </div>
+          </span>
+          <span class="status dev">● dev</span>
+        </a>
+
+        <a href="#" class="ls-row">
+          <span class="perms">-rw-r--r--</span>
+          <span class="size">0.8k</span>
+          <span class="year">2023</span>
+          <span>
+            <span class="name">nba-scraper</span>
+            <div class="desc">Automatizirani scraper za NBA utakmice.</div>
+            <div class="tech-row">
+              <span class="tech-pill">python</span>
+              <span class="tech-pill">selenium</span>
+              <span class="tech-pill">bs4</span>
+            </div>
+          </span>
+          <span class="status archived">archived</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="prompt">
+      <span class="path">~/portfolio</span>
+      <span class="branch">main</span>
+      <span class="cmd">./contact.sh</span>
+    </div>
+    <div class="output contact-block">
+      <div class="comment"># reci bok.</div>
+      <div class="big-prompt">→ <span class="email-line"><a href="mailto:antoniobnoni@gmail.com">antoniobnoni@gmail.com</a></span></div>
+      <div style="margin-top: 1rem; color: var(--fg-dim);">
+        // also: <a class="md-link" href="https://github.com/SigmaGrindset" style="margin-right: 1rem;">github</a>
+        <a class="md-link" href="https://www.linkedin.com/in/antonio-batarilovi%C4%87-509a26240/">linkedin</a>
+      </div>
+      <div style="margin-top: 2rem;"><span class="prompt" style="margin: 0; padding: 0;"></span><span class="cursor"></span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>// antonio batarilović · MMXXVI · built with vite, react, tanstack</span>
+    <span class="links">
+      <span><a href="https://github.com/SigmaGrindset">github</a></span>
+      <span><a href="https://www.linkedin.com/in/antonio-batarilovi%C4%87-509a26240/">linkedin</a></span>
+      <span><a href="mailto:antoniobnoni@gmail.com">email</a></span>
+    </span>
+  </footer>
+
+</main>
+
+</body>
+</html>

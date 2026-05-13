@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/i18n/i18n';
 import { useDocumentTitle } from '@/lib/useDocumentTitle';
 import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
@@ -17,19 +16,25 @@ export function ProjectPage({ slug }: { slug: string }) {
 
   if (!project) {
     return (
-      <section className="min-h-[60vh] flex items-center justify-center px-6 md:px-10 text-center">
-        <div className="max-w-[480px]">
-          <h1 className="font-serif font-normal text-[clamp(2rem,5vw,3.5rem)] leading-tight mb-4">
-            <em className="italic text-accent">{t.project.notFound}</em>
-          </h1>
-          <p className="text-fg-secondary mb-8">{t.project.notFoundText}</p>
+      <section className="px-6 md:px-10 max-w-[1200px] mx-auto pt-6 text-[13px]">
+        <div>
+          <span className="text-green font-medium">➜  </span>
+          <span className="text-blue">~/portfolio</span>
+          <span className="text-fg ml-2">cat</span>
+          <span className="text-amber ml-1.5">projects/{slug}</span>
+        </div>
+        <div className="ml-4 pl-4 border-l border-rule mt-3 mb-6">
+          <div className="text-red text-[13px] mb-3">
+            <span className="text-fg-faint">cat: </span>
+            projects/{slug}: No such file or directory
+          </div>
+          <p className="text-fg mb-4">{t.project.notFoundText}</p>
           <Link
             to="/"
             hash="projects"
-            className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] border border-fg text-fg px-5 py-2.5 hover:bg-fg hover:text-bg transition-colors"
+            className="inline-block text-blue border-b border-blue border-dashed hover:bg-green/20 transition-colors"
           >
-            <ArrowLeft size={12} />
-            {t.project.back}
+            ← cd ../projects
           </Link>
         </div>
       </section>
@@ -37,25 +42,16 @@ export function ProjectPage({ slug }: { slug: string }) {
   }
 
   const { prev, next } = getAdjacentProjects(slug);
-
   const hasFeatures = (project.features?.length ?? 0) > 0;
   const hasGallery = project.gallery.length > 0;
-
-  let n = 0;
-  const overviewNum = `0${++n}`;
-  const featuresNum = hasFeatures ? `0${++n}` : '';
-  const stackNum = `0${++n}`;
-  const galleryNum = hasGallery ? `0${++n}` : '';
 
   return (
     <div className="pb-12">
       <ProjectHero project={project} />
-      <ProjectOverview paragraphs={project.overview} num={overviewNum} />
-      {hasFeatures && project.features && (
-        <ProjectFeatures features={project.features} num={featuresNum} />
-      )}
-      <ProjectStack groups={project.techStack} num={stackNum} />
-      {hasGallery && <ProjectGallery images={project.gallery} num={galleryNum} />}
+      <ProjectOverview paragraphs={project.overview} />
+      {hasFeatures && project.features && <ProjectFeatures features={project.features} />}
+      <ProjectStack groups={project.techStack} />
+      {hasGallery && <ProjectGallery images={project.gallery} />}
       <ProjectNav prev={prev} next={next} />
     </div>
   );

@@ -1,66 +1,59 @@
-import { useRef } from 'react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { useTranslation } from '@/i18n/i18n';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 
 export function Nav() {
-  const { t } = useTranslation();
-  const ref = useRef<HTMLElement | null>(null);
+  const { t, locale } = useTranslation();
 
-  useGSAP(
-    () => {
-      gsap.from(ref.current, {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-      });
-    },
-    { scope: ref },
-  );
-
-  const links = [
-    { label: t.nav.about, href: '#about' },
-    { label: t.nav.projects, href: '#projects' },
-    { label: t.nav.contact, href: '#contact' },
+  const tabs = [
+    { num: '1', label: 'about', ext: '.md', href: '#about' },
+    { num: '2', label: 'projects', ext: '/', href: '#projects' },
+    { num: '3', label: 'contact', ext: '.sh', href: '#contact' },
   ];
 
   return (
-    <nav
-      ref={ref}
-      className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-rule"
-    >
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-5 flex justify-between items-baseline">
-        <a href="/" className="font-serif text-xl tracking-tight">
-          <em className="font-normal italic">A.</em>
-          <span className="font-semibold">Batarilović</span>
-        </a>
-        <div className="hidden md:flex items-baseline gap-10">
-          <ul className="flex gap-10">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-fg hover:text-accent transition-colors relative group"
-                >
-                  / {l.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent transition-all group-hover:w-full" />
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center gap-2 pl-6 border-l border-rule">
-            <LanguageToggle />
-            <ThemeToggle />
-          </div>
+    <header className="sticky top-0 z-50">
+      {/* Tmux-style status bar */}
+      <div className="bg-bg-2 border-b border-rule px-4 py-2 flex justify-between items-center text-[11px] text-fg-dim">
+        <div className="flex gap-4 items-center">
+          <span className="bg-bg-3 border border-rule rounded-sm px-2 py-0.5">
+            <span className="text-green">●</span> session
+          </span>
+          <span className="hidden sm:inline">~/portfolio/antonio</span>
+          <span className="text-purple hidden sm:inline">main</span>
         </div>
-        <div className="md:hidden flex items-center gap-2">
+        <div className="flex gap-4 items-center">
+          <span className="hidden md:inline">node 22.4.0</span>
+          <span className="font-mono">{locale.toUpperCase()}</span>
           <LanguageToggle />
           <ThemeToggle />
         </div>
       </div>
-    </nav>
+
+      {/* Vim-style tabs */}
+      <nav className="bg-bg border-b border-rule flex overflow-x-auto">
+        {tabs.map((tab, i) => (
+          <a
+            key={tab.label}
+            href={tab.href}
+            className={
+              'px-4 py-2.5 text-[12px] border-r border-rule whitespace-nowrap border-t-2 border-t-transparent ' +
+              (i === 0
+                ? 'bg-bg text-green border-t-green'
+                : 'bg-bg-2 text-fg-dim hover:text-fg hover:bg-bg-3') +
+              ' transition-colors'
+            }
+          >
+            <span className="text-fg-faint mr-2">[{tab.num}]</span>
+            <span className="text-blue">{tab.label}</span>
+            <span className="text-fg-dim">{tab.ext}</span>
+          </a>
+        ))}
+        <span className="flex-1 border-b border-transparent" aria-hidden="true">
+          {/* used in i18n only via t object below — silence unused */}
+          <span className="hidden">{t.nav.about}</span>
+        </span>
+      </nav>
+    </header>
   );
 }

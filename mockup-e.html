@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction E — 3D / Interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --fg: #ffffff;
+    --fg-2: #a0a0b8;
+    --fg-3: #606078;
+    --magenta: #ff2e88;
+    --cyan: #00f0ff;
+    --yellow: #fff200;
+    --lime: #aaff00;
+    --purple: #b14aff;
+    --grid: rgba(255, 255, 255, 0.03);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+  ::selection { background: var(--magenta); color: var(--fg); }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  }
+
+  /* GIANT AMBIENT BLOBS — animated */
+  .ambient {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(120px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  .ambient.m { width: 600px; height: 600px; background: var(--magenta); top: -10%; left: 60%; animation: float-a 12s ease-in-out infinite; }
+  .ambient.c { width: 500px; height: 500px; background: var(--cyan); top: 40%; left: -10%; animation: float-b 15s ease-in-out infinite; }
+  .ambient.p { width: 500px; height: 500px; background: var(--purple); bottom: -10%; right: 20%; animation: float-c 18s ease-in-out infinite; }
+  @keyframes float-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-100px, 100px) scale(1.2); }
+  }
+  @keyframes float-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(150px, -80px) scale(1.15); }
+  }
+  @keyframes float-c {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-120px, -100px) scale(1.25); }
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor-outer {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid var(--magenta);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+    mix-blend-mode: exclusion;
+  }
+  .cursor-inner {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--magenta);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: background 0.2s;
+  }
+
+  /* WRAP */
+  .wrap { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; padding: 0 2.5rem; }
+
+  /* TOP BAR */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: difference;
+  }
+  nav .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  nav .brand .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    box-shadow: 0 0 12px var(--lime);
+  }
+  nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+  nav a {
+    color: var(--fg);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+  nav a:hover { color: var(--cyan); }
+  nav .clock {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--fg-2);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 6rem 0;
+  }
+  .hero .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero .label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--cyan);
+  }
+
+  .hero h1 {
+    font-size: clamp(4rem, 13vw, 14rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .hero h1 .row { display: block; position: relative; }
+  .hero h1 .outline {
+    -webkit-text-stroke: 1.5px var(--fg);
+    color: transparent;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--magenta) 0%, var(--cyan) 50%, var(--lime) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+  }
+  .hero h1 .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .hero h1 .glitch::before, .hero h1 .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .hero h1 .glitch::before {
+    color: var(--cyan);
+    transform: translate(-3px, 0);
+    mix-blend-mode: screen;
+    animation: glitch-1 4s infinite;
+  }
+  .hero h1 .glitch::after {
+    color: var(--magenta);
+    transform: translate(3px, 0);
+    mix-blend-mode: screen;
+    animation: glitch-2 4s infinite;
+  }
+  @keyframes glitch-1 {
+    0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+    92% { transform: translate(-4px, 1px); opacity: 1; }
+    94% { transform: translate(3px, -1px); opacity: 1; }
+  }
+  @keyframes glitch-2 {
+    0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+    93% { transform: translate(4px, 1px); opacity: 1; }
+    95% { transform: translate(-2px, 1px); opacity: 1; }
+  }
+
+  .hero .lede {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--fg-2);
+    max-width: 50ch;
+    margin: 3rem 0;
+  }
+  .hero .meta-bar {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .hero .meta-bar div { display: flex; flex-direction: column; gap: 0.3rem; }
+  .hero .meta-bar dt { color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; }
+  .hero .meta-bar dd { color: var(--fg); font-size: 0.9rem; }
+
+  /* SECTION HEADER */
+  section { padding: 8rem 0; position: relative; }
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 2rem;
+  }
+  .section-head .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .section-head h2 {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .section-head h2 .ital {
+    font-style: italic;
+    color: var(--magenta);
+    font-weight: 400;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--fg-2);
+    margin-bottom: 1.5rem;
+    max-width: 60ch;
+  }
+  .about-text strong { color: var(--fg); font-weight: 600; }
+  .about-text a {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 2px solid var(--cyan);
+  }
+  .about-text a:hover { color: var(--magenta); border-color: var(--magenta); }
+
+  .info-card {
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+  }
+  .info-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .info-row dt { color: var(--fg-3); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; }
+  .info-row dd { color: var(--fg); }
+  .info-row a { color: var(--lime); text-decoration: none; }
+
+  .skills-bar {
+    margin-top: 5rem;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem 0;
+  }
+  .marquee {
+    display: flex;
+    gap: 3rem;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  .marquee span {
+    color: var(--fg-3);
+    display: inline-block;
+  }
+  .marquee span.accent { color: var(--magenta); }
+  .marquee span.cy { color: var(--cyan); }
+  .marquee span.li { color: var(--lime); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+  }
+  .project {
+    position: relative;
+    text-decoration: none;
+    color: var(--fg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .project::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 46, 136, 0.15), rgba(0, 240, 255, 0.1));
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .project:hover {
+    transform: scale(0.98);
+    border-color: var(--magenta);
+  }
+  .project:hover::before { opacity: 1; }
+  .project:hover .num { color: var(--magenta); transform: scale(1.1); }
+  .project .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--fg-3);
+    line-height: 1;
+    transition: all 0.4s;
+  }
+  .project .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+  }
+  .project h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .project .cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .project .arrow {
+    font-size: 2rem;
+    color: var(--fg-3);
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .project:hover .arrow { color: var(--magenta); transform: rotate(-45deg); }
+  .project.featured {
+    grid-column: span 8;
+  }
+  .project.small { grid-column: span 4; }
+  .project.featured .num { font-size: 8rem; }
+  .project.featured h3 { font-size: 3rem; }
+  .project.featured .desc {
+    font-size: 1rem;
+    color: var(--fg-2);
+    max-width: 50ch;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+  .project .status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--lime);
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    align-self: start;
+  }
+  .project .status.dev { border-color: var(--yellow); color: var(--yellow); }
+  .project .status.archived { border-color: var(--fg-3); color: var(--fg-3); }
+
+  /* CONTACT */
+  .contact { text-align: center; padding: 12rem 0; }
+  .contact h2 {
+    font-size: clamp(5rem, 18vw, 18rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    margin-bottom: 3rem;
+  }
+  .contact h2 .grad {
+    background: linear-gradient(135deg, var(--magenta), var(--cyan), var(--lime));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .contact .mail {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 2px solid var(--magenta);
+    padding-bottom: 0.3rem;
+  }
+  .contact .mail:hover {
+    color: var(--magenta);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 2.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  footer a { color: var(--fg-3); text-decoration: none; margin-left: 1.5rem; }
+  footer a:hover { color: var(--magenta); }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .project.featured, .project.small { grid-column: span 12; }
+    nav ul { display: none; }
+    * { cursor: auto; }
+    .cursor-outer, .cursor-inner { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ambient blobs -->
+<div class="ambient m"></div>
+<div class="ambient c"></div>
+<div class="ambient p"></div>
+
+<!-- custom cursor -->
+<div class="cursor-outer" id="cursor-outer"></div>
+<div class="cursor-inner" id="cursor-inner"></div>
+
+<nav>
+  <div class="brand"><span class="dot"></span>antonio.dev</div>
+  <ul>
+    <li><a href="#about">/01 about</a></li>
+    <li><a href="#work">/02 work</a></li>
+    <li><a href="#contact">/03 contact</a></li>
+  </ul>
+  <div class="clock" id="clock">UTC+1 — 14:22:08</div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="label">— available · zagreb, hr</div>
+      <h1>
+        <span class="row outline">FRONTEND</span>
+        <span class="row glitch" data-text="DEVELOPER">DEVELOPER</span>
+        <span class="row grad">&amp; designer.</span>
+      </h1>
+      <p class="lede">
+        Student treće godine FER-a u Zagrebu. Iako najčešće radim na frontendu, jednako me zanima backend i dizajn sučelja. Najviše me veseli cijeli proces izrade aplikacije, od ideje do deploya.
+      </p>
+      <dl class="meta-bar">
+        <div><dt>Year</dt><dd>2026</dd></div>
+        <div><dt>Loc</dt><dd>Zagreb, HR</dd></div>
+        <div><dt>Now</dt><dd>Sofascore Academy</dd></div>
+        <div><dt>Status</dt><dd style="color: var(--lime);">● Open</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="section-head">
+      <div class="label">/01 — Index</div>
+      <h2>About <span class="ital">me</span>.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          Trenutno sam na trećoj godini <strong>Fakulteta elektrotehnike i računarstva</strong> u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz <a href="https://shiftnudge.com/">Shift Nudge</a> tečaj.
+        </p>
+        <p>
+          Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya. Većinu projekata pokrećem iz vlastite radoznalosti.
+        </p>
+      </div>
+      <aside class="info-card">
+        <div class="label">// Stats</div>
+        <dl>
+          <div class="info-row"><dt>Location</dt><dd>Zagreb, HR</dd></div>
+          <div class="info-row"><dt>Status</dt><dd style="color: var(--lime);">● Open</dd></div>
+          <div class="info-row"><dt>Edu</dt><dd>FER · 3rd yr</dd></div>
+          <div class="info-row"><dt>Now</dt><dd>Sofascore</dd></div>
+          <div class="info-row"><dt>EN</dt><dd>B2</dd></div>
+          <div class="info-row"><dt>CV</dt><dd><a href="/cv.pdf">→ download</a></dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <div class="skills-bar">
+      <div class="marquee">
+        <span>REACT —</span><span class="accent">TYPESCRIPT —</span><span>NEXT.JS —</span><span class="cy">TAILWIND —</span><span>NODE.JS —</span><span class="li">POSTGRESQL —</span><span>PYTHON —</span><span class="accent">D3.JS —</span><span>FIGMA —</span><span class="cy">SPRING BOOT —</span><span>DOCKER —</span><span class="li">UI/UX —</span>
+        <span>REACT —</span><span class="accent">TYPESCRIPT —</span><span>NEXT.JS —</span><span class="cy">TAILWIND —</span><span>NODE.JS —</span><span class="li">POSTGRESQL —</span><span>PYTHON —</span><span class="accent">D3.JS —</span><span>FIGMA —</span><span class="cy">SPRING BOOT —</span><span>DOCKER —</span><span class="li">UI/UX —</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-head">
+      <div class="label">/02 — Index</div>
+      <h2>Selected <span class="ital">work</span>.</h2>
+    </div>
+    <div class="projects-grid">
+      <a class="project featured" href="#">
+        <div>
+          <div class="num">01</div>
+          <div class="status">● live</div>
+        </div>
+        <div class="info">
+          <div>
+            <div class="cat">★ featured · sofascore academy</div>
+            <h3>Sofascore Canteen</h3>
+            <p class="desc">Web aplikacija za upravljanje uredskim ručkovima. Razvijeno u sklopu Frontend Academy programa.</p>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+      <a class="project small" href="#">
+        <div class="num">02</div>
+        <div class="info">
+          <div>
+            <div class="cat">★ data viz</div>
+            <h3>USA Elections</h3>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+      <a class="project small" href="#">
+        <div class="num">03</div>
+        <div class="info">
+          <div>
+            <div class="cat">web app</div>
+            <h3>GearShare</h3>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+      <a class="project small" href="#">
+        <div class="num">04</div>
+        <div class="info">
+          <div>
+            <div class="cat">web app</div>
+            <h3>LearnFlow</h3>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+      <a class="project featured" href="#">
+        <div>
+          <div class="num">05</div>
+          <div class="status dev">● dev</div>
+        </div>
+        <div class="info">
+          <div>
+            <div class="cat">web app · solo</div>
+            <h3>SpotiLens</h3>
+            <p class="desc">Spotify listening stats s extended streaming history upload-om. Trenutno u dev modu zbog API ograničenja.</p>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+      <a class="project small" href="#">
+        <div class="num">06</div>
+        <div class="info">
+          <div>
+            <div class="cat">scraping</div>
+            <h3>NBA Scraper</h3>
+          </div>
+          <div class="arrow">↗</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="label" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 2rem; display: inline-block;">/03 — Contact</div>
+    <h2>
+      Reci <span class="grad">bok</span>.
+    </h2>
+    <a href="mailto:antoniobnoni@gmail.com" class="mail">antoniobnoni@gmail.com →</a>
+  </section>
+</div>
+
+<footer>
+  <span>// Antonio Batarilović · MMXXVI</span>
+  <span>
+    <a href="#">github</a>
+    <a href="#">linkedin</a>
+    <a href="#">email</a>
+  </span>
+</footer>
+
+<script>
+  // CUSTOM CURSOR
+  const outer = document.getElementById('cursor-outer');
+  const inner = document.getElementById('cursor-inner');
+  let mx = 0, my = 0, ox = 0, oy = 0;
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    inner.style.left = mx + 'px';
+    inner.style.top = my + 'px';
+  });
+  function tick() {
+    ox += (mx - ox) * 0.18;
+    oy += (my - oy) * 0.18;
+    outer.style.left = ox + 'px';
+    outer.style.top = oy + 'px';
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // CURSOR HOVER STATES
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      outer.style.width = '70px';
+      outer.style.height = '70px';
+      outer.style.borderColor = 'var(--cyan)';
+      inner.style.background = 'var(--cyan)';
+    });
+    el.addEventListener('mouseleave', () => {
+      outer.style.width = '40px';
+      outer.style.height = '40px';
+      outer.style.borderColor = 'var(--magenta)';
+      inner.style.background = 'var(--magenta)';
+    });
+  });
+
+  // CLOCK
+  function updateClock() {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    const s = String(d.getSeconds()).padStart(2, '0');
+    document.getElementById('clock').textContent = `UTC+1 — ${h}:${m}:${s}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>

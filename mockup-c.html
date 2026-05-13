@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction C — Swiss / Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafafa;
+    --bg-2: #ffffff;
+    --fg: #0a0a0a;
+    --fg-2: #4a4a4a;
+    --fg-3: #8a8a8a;
+    --fg-4: #c0c0c0;
+    --rule: #e8e8e8;
+    --accent: #d6492f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  ::selection { background: var(--accent); color: white; }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1.5rem;
+    row-gap: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    z-index: 50;
+    padding: 1.5rem 0;
+  }
+  nav .grid { align-items: baseline; }
+  nav .brand {
+    grid-column: 1 / span 4;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  nav .brand .role {
+    color: var(--fg-3);
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
+  nav ul {
+    grid-column: 8 / span 5;
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    justify-content: flex-end;
+  }
+  nav a {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+  nav .lang {
+    color: var(--fg-3);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 8rem 0 6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .grid { row-gap: 2rem; }
+  .hero .label {
+    grid-column: 1 / span 2;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .hero .label-num {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero h1 {
+    grid-column: 3 / span 10;
+    font-size: clamp(3.5rem, 8.5vw, 8.5rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .hero h1 .accent {
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .hero .lede-label {
+    grid-column: 1 / span 2;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding-top: 0.5rem;
+  }
+  .hero .lede {
+    grid-column: 3 / span 7;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--fg-2);
+    font-weight: 400;
+    max-width: 50ch;
+  }
+  .hero .meta-label {
+    grid-column: 1 / span 2;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-top: 4rem;
+  }
+  .hero dl {
+    grid-column: 3 / span 10;
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1.5rem;
+    border-top: 1px solid var(--fg);
+    padding-top: 1rem;
+  }
+  .hero dl dt {
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .hero dl dd {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* SECTION HEADER */
+  section { padding: 6rem 0; border-bottom: 1px solid var(--rule); }
+  .section-head {
+    margin-bottom: 4rem;
+  }
+  .section-head .label {
+    grid-column: 1 / span 2;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    align-self: end;
+  }
+  .section-head h2 {
+    grid-column: 3 / span 10;
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 22ch;
+  }
+  .section-head h2 .accent { color: var(--accent); }
+
+  /* ABOUT BODY */
+  .about-body { row-gap: 0; }
+  .about-body .col-text {
+    grid-column: 3 / span 6;
+  }
+  .about-body p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    color: var(--fg);
+    max-width: 60ch;
+  }
+  .about-body .col-side {
+    grid-column: 10 / span 3;
+  }
+  .about-body .col-side dl {
+    border-top: 1px solid var(--rule);
+  }
+  .about-body .col-side .row {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.65rem 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+  .about-body .col-side dt { color: var(--fg-3); }
+  .about-body .col-side dd { font-weight: 500; }
+  .about-body .col-side a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .about-body .col-side a:hover { text-decoration: underline; }
+
+  .skills {
+    grid-column: 3 / span 10;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+  }
+  .skills + .skills { margin-top: 1.5rem; padding-top: 1.5rem; }
+  .skills h3 {
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .skills .list {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* PROJECTS — clean table */
+  .projects-table {
+    grid-column: 1 / span 12;
+    border-top: 1px solid var(--fg);
+  }
+  .project-row {
+    display: grid;
+    grid-template-columns: 80px 100px 1fr 180px 80px;
+    align-items: baseline;
+    column-gap: 1.5rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--fg);
+    position: relative;
+    transition: padding 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .project-row::before {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -1px;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .project-row:hover::before { width: 100%; }
+  .project-row:hover .title { color: var(--accent); }
+  .project-row:hover .arrow { transform: translateX(8px); }
+  .project-row .num {
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+  .project-row .year {
+    font-size: 0.85rem;
+    color: var(--fg-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .project-row .main h3 {
+    font-size: 1.85rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+  }
+  .project-row .main p {
+    font-size: 0.9rem;
+    color: var(--fg-2);
+    max-width: 55ch;
+    line-height: 1.55;
+  }
+  .project-row .tech {
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    text-align: right;
+  }
+  .project-row .tech span:not(:last-child)::after {
+    content: ', ';
+  }
+  .project-row .arrow {
+    font-size: 1.5rem;
+    color: var(--fg-3);
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+    justify-self: end;
+  }
+  .project-row.featured .main h3 {
+    font-weight: 500;
+  }
+  .project-row .featured-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* CONTACT */
+  .contact { text-align: left; padding-bottom: 0; border-bottom: none; }
+  .contact .grid { align-items: end; }
+  .contact .label {
+    grid-column: 1 / span 2;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .contact h2 {
+    grid-column: 3 / span 10;
+    font-size: clamp(3.5rem, 8.5vw, 7.5rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .contact .mail-row {
+    grid-column: 3 / span 10;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--fg);
+  }
+  .contact .mail-row a {
+    font-size: 1.5rem;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid var(--fg);
+    padding-bottom: 0.2rem;
+  }
+  .contact .mail-row a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem 0;
+    font-size: 0.75rem;
+    color: var(--fg-3);
+  }
+  footer .grid { align-items: center; }
+  footer .copy { grid-column: 1 / span 6; }
+  footer .links { grid-column: 7 / span 6; text-align: right; display: flex; gap: 1.5rem; justify-content: flex-end; }
+  footer a { color: var(--fg-3); text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(6, 1fr); }
+    .hero h1, .hero .lede, .hero dl, .about-body .col-text, .about-body .col-side, .skills, .section-head h2, .contact h2, .contact .mail-row { grid-column: 1 / -1; }
+    .hero .label, .section-head .label, .contact .label, .hero .lede-label, .hero .meta-label { grid-column: 1 / -1; }
+    .hero dl { grid-template-columns: repeat(2, 1fr); }
+    .project-row { grid-template-columns: 60px 1fr; }
+    .project-row .year, .project-row .tech, .project-row .arrow { display: none; }
+    .skills { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container grid">
+    <div class="brand">
+      Antonio Batarilović
+      <span class="role">— frontend developer, Zagreb</span>
+    </div>
+    <ul>
+      <li><a href="#about">O meni</a></li>
+      <li><a href="#work">Projekti</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+      <li><a href="#" class="lang">EN</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container grid">
+    <div class="label"><span class="label-num">01 →</span></div>
+    <h1>
+      Gradim stvari<br>
+      za <span class="accent">web.</span>
+    </h1>
+    <div class="lede-label">Intro</div>
+    <p class="lede">
+      Student treće godine FER-a u Zagrebu, trenutno na Sofascore Frontend Academy. Iako najčešće radim na frontendu, jednako me zanima backend i dizajn sučelja. Najviše me veseli cijeli proces izrade aplikacije.
+    </p>
+    <div class="meta-label">Info</div>
+    <dl>
+      <div><dt>Lokacija</dt><dd>Zagreb, HR</dd></div>
+      <div><dt>Status</dt><dd>Otvoren za prilike</dd></div>
+      <div><dt>Edukacija</dt><dd>FER — 3. god.</dd></div>
+      <div><dt>Trenutno</dt><dd>Sofascore Academy</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container">
+    <div class="section-head grid">
+      <div class="label"><span class="label-num">02 →</span> O meni</div>
+      <h2>Frontend developer, <span class="accent">full-stack curious.</span></h2>
+    </div>
+    <div class="about-body grid">
+      <div class="col-text">
+        <p>
+          Trenutno sam na trećoj godini Fakulteta elektrotehnike i računarstva u Zagrebu. Posljednje vrijeme intenzivno radim s Reactom i TypeScriptom, a UI/UX dizajn sam dodatno učio kroz Shift Nudge tečaj.
+        </p>
+        <p>
+          Ispalo je da najviše vremena trošim na frontend, ali jednako me zanima backend i dizajn sučelja. Najviše me veseli kad mogu pratiti cijeli proces izrade aplikacije, od prve ideje do deploya. Većinu projekata pokrećem iz vlastite radoznalosti.
+        </p>
+      </div>
+      <aside class="col-side">
+        <dl>
+          <div class="row"><dt>Lokacija</dt><dd>Zagreb, HR</dd></div>
+          <div class="row"><dt>Status</dt><dd>Open</dd></div>
+          <div class="row"><dt>Edukacija</dt><dd>FER, 3. god.</dd></div>
+          <div class="row"><dt>Trenutno</dt><dd>Sofascore Academy</dd></div>
+          <div class="row"><dt>Engleski</dt><dd>B2</dd></div>
+          <div class="row"><dt>CV</dt><dd><a href="/cv.pdf">Preuzmi →</a></dd></div>
+        </dl>
+      </aside>
+      <div class="skills">
+        <h3>Frontend</h3>
+        <div class="list">React, Next.js, TypeScript, JavaScript, HTML5, CSS3, TanStack Router, PandaCSS, Tailwind</div>
+      </div>
+      <div class="skills">
+        <h3>Backend &amp; Data</h3>
+        <div class="list">Node.js, Express, PostgreSQL, MongoDB, Python, BeautifulSoup</div>
+      </div>
+      <div class="skills">
+        <h3>Design &amp; Tools</h3>
+        <div class="list">Figma, UI/UX, Git, Blender</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="container">
+    <div class="section-head grid">
+      <div class="label"><span class="label-num">03 →</span> Projekti</div>
+      <h2>Odabrani <span class="accent">radovi.</span></h2>
+    </div>
+    <div class="grid">
+      <div class="projects-table">
+        <a href="#" class="project-row featured">
+          <div class="num">01</div>
+          <div class="year">2026</div>
+          <div class="main">
+            <div class="featured-tag">★ Featured · Sofascore Academy</div>
+            <h3 class="title">Sofascore Canteen</h3>
+            <p>Web aplikacija koja zaposlenicima omogućuje organizaciju tjednih obroka, a catering službi uvid u narudžbe radi pripreme jela.</p>
+          </div>
+          <div class="tech"><span>React</span><span>PandaCSS</span><span>TanStack Router</span></div>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#" class="project-row featured">
+          <div class="num">02</div>
+          <div class="year">2026</div>
+          <div class="main">
+            <div class="featured-tag">★ Featured · Data Viz</div>
+            <h3 class="title">USA Elections</h3>
+            <p>Vizualizacija rezultata svih predsjedničkih izbora u SAD-u od 1789. do 2024. godine kroz interaktivnu kartu saveznih država.</p>
+          </div>
+          <div class="tech"><span>Python</span><span>PostgreSQL</span><span>React</span><span>D3</span></div>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#" class="project-row">
+          <div class="num">03</div>
+          <div class="year">2025</div>
+          <div class="main">
+            <h3 class="title">GearShare</h3>
+            <p>Web platforma koja povezuje trgovce sezonskom sportskom opremom s klijentima.</p>
+          </div>
+          <div class="tech"><span>React</span><span>Spring Boot</span><span>PostgreSQL</span></div>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#" class="project-row">
+          <div class="num">04</div>
+          <div class="year">2026</div>
+          <div class="main">
+            <h3 class="title">LearnFlow</h3>
+            <p>Planer učenja za studente — praćenje dnevnog plana i stvarno utrošenog vremena uz grafove aktivnosti.</p>
+          </div>
+          <div class="tech"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#" class="project-row">
+          <div class="num">05</div>
+          <div class="year">2024</div>
+          <div class="main">
+            <h3 class="title">SpotiLens</h3>
+            <p>Full-stack aplikacija spojena na Spotify API — prikazuje statistiku slušanja artista, pjesama i albuma.</p>
+          </div>
+          <div class="tech"><span>React</span><span>Node.js</span><span>MongoDB</span></div>
+          <div class="arrow">→</div>
+        </a>
+        <a href="#" class="project-row">
+          <div class="num">06</div>
+          <div class="year">2023</div>
+          <div class="main">
+            <h3 class="title">NBA Scraper</h3>
+            <p>Automatizirani scraper koji prikuplja podatke o NBA utakmicama i prikazuje ih kroz jednostavan web prikaz.</p>
+          </div>
+          <div class="tech"><span>Python</span><span>Selenium</span><span>BS4</span></div>
+          <div class="arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container grid">
+    <div class="label"><span style="color: var(--accent);">04 →</span> Kontakt</div>
+    <h2>
+      Reci <span style="color: var(--accent);">bok.</span>
+    </h2>
+    <div class="mail-row">
+      <a href="mailto:antoniobnoni@gmail.com">antoniobnoni@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container grid">
+    <span class="copy">© 2026 Antonio Batarilović. Sva prava pridržana.</span>
+    <span class="links">
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Email</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

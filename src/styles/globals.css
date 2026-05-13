@@ -1,31 +1,47 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brutalist / Editorial — paper + ink + crimson */
-  --color-bg: #f5f1e8;
-  --color-bg-2: #ede8da;
-  --color-fg: #0e0e0d;
-  --color-fg-secondary: #4a4945;
-  --color-fg-tertiary: #8a8880;
-  --color-rule: #c8c2b0;
-  --color-accent: #a8261f;
-  --color-accent-hover: #8e1f19;
+  /* Terminal / Code-themed — GitHub Dark inspired */
+  --color-bg: #0d1117;
+  --color-bg-2: #161b22;
+  --color-bg-3: #1c2128;
+  --color-fg: #c9d1d9;
+  --color-fg-dim: #8b949e;
+  --color-fg-faint: #484f58;
+  --color-rule: #21262d;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Fraunces", "Times New Roman", serif;
+  --color-green: #3fb950;
+  --color-amber: #d29922;
+  --color-blue: #58a6ff;
+  --color-purple: #bc8cff;
+  --color-red: #f85149;
+
+  /* "Accent" is green — primary signal color */
+  --color-accent: #3fb950;
+  --color-accent-hover: #56d364;
+
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* Dark theme override — newspaper at night */
-:root[data-theme="dark"] {
-  --color-bg: #0e0e0d;
-  --color-bg-2: #18181a;
-  --color-fg: #f5f1e8;
-  --color-fg-secondary: #b8b4a8;
-  --color-fg-tertiary: #6e6c66;
-  --color-rule: #3a3835;
-  --color-accent: #d4392e;
-  --color-accent-hover: #e85040;
+/* Light theme — GitHub Light inspired */
+:root[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-bg-2: #f6f8fa;
+  --color-bg-3: #eaeef2;
+  --color-fg: #1f2328;
+  --color-fg-dim: #59636e;
+  --color-fg-faint: #818b98;
+  --color-rule: #d0d7de;
+
+  --color-green: #1a7f37;
+  --color-amber: #9a6700;
+  --color-blue: #0969da;
+  --color-purple: #8250df;
+  --color-red: #cf222e;
+
+  --color-accent: #1a7f37;
+  --color-accent-hover: #116329;
 }
 
 @layer base {
@@ -36,51 +52,72 @@
     scroll-behavior: smooth;
   }
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-bg);
+    background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    color: var(--color-fg);
   }
   body {
     background: var(--color-bg);
     color: var(--color-fg);
-    font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+  }
+  /* CRT scanlines overlay (dark theme only — feels weird on light) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.012) 2px,
+      rgba(255, 255, 255, 0.012) 3px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+  :root[data-theme="light"] body::before {
+    display: none;
   }
 }
 
 @layer utilities {
-  .font-serif {
-    font-family: var(--font-serif);
+  .font-mono { font-family: var(--font-mono); }
+  .cursor-blink {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    background: var(--color-green);
+    vertical-align: text-bottom;
+    animation: blink 1.1s steps(2, jump-none) infinite;
   }
-  .font-mono {
-    font-family: var(--font-mono);
-  }
-  .wonk {
-    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+  @keyframes blink {
+    50% { opacity: 0; }
   }
 }
 
 /* View transitions */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.35s;
+  animation-duration: 0.3s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 ::view-transition-old(root) { animation-name: vt-fade-out; }
 ::view-transition-new(root) { animation-name: vt-fade-in; }
 @keyframes vt-fade-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 @keyframes vt-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
+  ::view-transition-new(root) { animation: none; }
 }
