@@ -6,6 +6,8 @@ import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { NotFound } from '@/components/NotFound';
+import { CustomCursor } from '@/components/fx/CustomCursor';
+import { AmbientBlobs } from '@/components/fx/AmbientBlobs';
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -16,9 +18,11 @@ function RootLayout() {
   return (
     <ThemeProvider>
       <I18nProvider>
+        <AmbientBlobs />
+        <CustomCursor />
         <ScrollProgress />
         <Nav />
-        <main id="main" tabIndex={-1}>
+        <main id="main" tabIndex={-1} className="relative z-10">
           <Outlet />
         </main>
         <Footer />
